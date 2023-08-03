@@ -27,6 +27,20 @@ class _AppState extends State<App> {
                 SizedBox(
                   height: 60,
                 ),
+                // ListCard(
+                //   tranState: '거래완료',
+                //   tranDate: '2023.08.03 14:10',
+                //   tranPerson: '후추동생',
+                //   tranItem: '그리니즈',
+                //   tranPrice: '4,000원',
+                // ),
+                // ListCard(
+                //   tranState: '거래중',
+                //   tranDate: '2023.08.03 14:10',
+                //   tranPerson: '윤여울',
+                //   tranItem: '램',
+                //   tranPrice: '30,000원',
+                // ),
               ],
             ),
           ),
