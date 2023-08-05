@@ -19,7 +19,7 @@ class _AppState extends State<RegisterTranPage> {
         padding: const EdgeInsets.all(26),
         child: Column(
           children: const [
-            RegisterBtn(),
+            RegisterBtn(btnName: '등록하기'),
           ],
         ),
       ),
