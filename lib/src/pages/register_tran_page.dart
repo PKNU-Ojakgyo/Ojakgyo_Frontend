@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/text_input.dart';
+import 'package:ojakgyo/widgets/inquriy_btn.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({super.key});
@@ -27,6 +28,7 @@ class _AppState extends State<RegisterTranPage> {
             TextInput(
               textType: '아이디',
             ),
+            InquiryBtn(btnName: '락커 조회하기')
           ],
         ),
       ),
