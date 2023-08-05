@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
+import 'package:ojakgyo/widgets/register_btn.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({super.key});
@@ -11,10 +12,17 @@ class RegisterTranPage extends StatefulWidget {
 class _AppState extends State<RegisterTranPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: BackNavBar(),
+    return Scaffold(
+      appBar: const BackNavBar(),
       backgroundColor: Colors.white,
-      body: Text('거래 등록 페이지'),
+      body: Padding(
+        padding: const EdgeInsets.all(26),
+        child: Column(
+          children: const [
+            RegisterBtn(),
+          ],
+        ),
+      ),
     );
   }
 }
