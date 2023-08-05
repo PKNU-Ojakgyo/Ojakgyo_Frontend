@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/my_page.dart';
 import 'package:ojakgyo/widgets/list_card.dart';
+import 'package:ojakgyo/src/pages/register_tran_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -116,17 +117,26 @@ class _AppState extends State<MainPage> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Center(
-                          child: Icon(
-                            Icons.add,
-                            size: 35,
+                    InkWell(
+                      onTap: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterTranPage()),
+                        ),
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 35,
+                            ),
                           ),
                         ),
                       ),
