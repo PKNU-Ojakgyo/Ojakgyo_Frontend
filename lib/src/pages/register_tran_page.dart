@@ -4,6 +4,7 @@ import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/text_input.dart';
 import 'package:ojakgyo/widgets/inquiry_btn.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
+import 'package:ojakgyo/widgets/sub_title.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({super.key});
@@ -32,6 +33,9 @@ class _AppState extends State<RegisterTranPage> {
             InquiryBtn(btnName: '락커 조회하기'),
             MainTitle(
               mainTitle: '거래 등록',
+            ),
+            SubTitle(
+              subTitle: '안녕하세요',
             ),
           ],
         ),
