@@ -4,9 +4,11 @@ class TextInput extends StatefulWidget {
   const TextInput({
     Key? key,
     required this.textType,
+    required this.hintText,
   }) : super(key: key);
 
   final String textType;
+  final String hintText;
 
   @override
   State<TextInput> createState() => _TextInputState();
@@ -20,6 +22,7 @@ class _TextInputState extends State<TextInput> {
       child: TextField(
         obscureText: widget.textType == '비밀번호' ? true : false,
         decoration: InputDecoration(
+          hintText: widget.hintText,
           border: const OutlineInputBorder(),
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(

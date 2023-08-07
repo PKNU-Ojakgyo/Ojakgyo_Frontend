@@ -10,14 +10,26 @@ class InquiryBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => {print('click')},
-      child: Text(
-        btnName,
-        style: const TextStyle(
-          fontSize: 15,
+    return Row(
+      children: [
+        TextButton(
+          style: ButtonStyle(
+            padding:
+                MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+          ),
+          onPressed: () => {print('click')},
+          child: Column(
+            children: [
+              Text(
+                btnName,
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
