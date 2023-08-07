@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/my_page_btn.dart';
+import 'package:ojakgyo/widgets/line.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -81,10 +82,7 @@ class _AppState extends State<MyPage> {
             const SizedBox(
               height: 160,
             ),
-            Container(
-              height: 1.0,
-              color: Colors.black87,
-            ),
+            const Line(),
             const SizedBox(
               height: 24,
             ),
