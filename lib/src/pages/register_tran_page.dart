@@ -15,6 +15,19 @@ class RegisterTranPage extends StatefulWidget {
 }
 
 class _AppState extends State<RegisterTranPage> {
+  bool? _isChecked = false;
+  final List<String> banks = [
+    '카카오뱅크',
+    '국민은행',
+    '기업은행',
+    '농협은행',
+    '신한은행',
+    '우리은행',
+    '하나은행',
+    '부산은행'
+  ];
+  String? selectedBank = '카카오뱅크';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,13 +62,68 @@ class _AppState extends State<RegisterTranPage> {
                 textType: '거래 등록자 전화번호',
                 hintText: '거래 등록자의 전화번호를 입력하세요.',
               ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 24.0,
+                    child: Checkbox(
+                      value: _isChecked,
+                      onChanged: (value) {
+                        setState(
+                          () {
+                            _isChecked = value;
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  const Text('판매자'),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  SizedBox(
+                    width: 24.0,
+                    child: Checkbox(
+                      value: _isChecked,
+                      onChanged: (value) {
+                        setState(
+                          () {
+                            _isChecked = value;
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  const Text('구매자'),
+                ],
+              ),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 정보 입력'),
-              const TextInput(
-                textType: '거래 계좌 번호',
-                hintText: '거래를 진행할 계좌 번호를 입력하세요.',
+              Row(
+                children: [
+                  DropdownButton(
+                    value: selectedBank,
+                    items: banks.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedBank = value;
+                      });
+                    },
+                  ),
+                ],
               ),
               const TextInput(
                 textType: '거래 금액',
