@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:ojakgyo/src/pages/main_page.dart';
+import 'dart:convert';
 
-// MainPage(userName: '윤현진',),
-// MyPage(),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const App());
+  String jsonString = await rootBundle.loadString('lib/src/testdata/user.json');
+  Map<String, dynamic> user = json.decode(jsonString);
+
+  print('ID: ${user["id"]}');
+  print('Name: ${user["name"]}');
+  print('Password: ${user["password"]}');
+  print('Phone: ${user["phone"]}');
+
+  // runApp(const App());
 }
 
 class App extends StatefulWidget {
@@ -20,7 +29,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: MainPage(
-        userName: '윤현진',
+        userName: '손성아',
       ),
     );
   }
