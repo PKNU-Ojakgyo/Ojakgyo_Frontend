@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:ojakgyo/src/pages/main_page.dart';
-import 'dart:convert';
+// import 'dart:convert';
+// import 'package:flutter/services.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
 
-  String jsonString = await rootBundle.loadString('lib/src/testdata/user.json');
-  Map<String, dynamic> user = json.decode(jsonString);
-
-  print('ID: ${user["id"]}');
-  print('Name: ${user["name"]}');
-  print('Password: ${user["password"]}');
-  print('Phone: ${user["phone"]}');
+  // String jsonString = await rootBundle.loadString('lib/src/testdata/user.json');
+  // Map<String, dynamic> user = json.decode(jsonString);
 
   // runApp(const App());
 }
