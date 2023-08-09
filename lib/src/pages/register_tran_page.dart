@@ -21,7 +21,8 @@ class RegisterTranPage extends StatefulWidget {
 }
 
 class _AppState extends State<RegisterTranPage> {
-  bool? _isChecked = false;
+  bool? isSeller = false;
+  bool? isBuyer = false;
   final List<String> banks = [
     '카카오뱅크',
     '국민은행',
@@ -79,11 +80,18 @@ class _AppState extends State<RegisterTranPage> {
                   SizedBox(
                     width: 24.0,
                     child: Checkbox(
-                      value: _isChecked,
+                      value: isSeller,
                       onChanged: (value) {
                         setState(
                           () {
-                            _isChecked = value;
+                            isSeller = value;
+                            if (isBuyer ?? true) {
+                              setState(
+                                () {
+                                  isBuyer = false;
+                                },
+                              );
+                            }
                           },
                         );
                       },
@@ -99,11 +107,18 @@ class _AppState extends State<RegisterTranPage> {
                   SizedBox(
                     width: 24.0,
                     child: Checkbox(
-                      value: _isChecked,
+                      value: isBuyer,
                       onChanged: (value) {
                         setState(
                           () {
-                            _isChecked = value;
+                            isBuyer = value;
+                            if (isSeller ?? true) {
+                              setState(
+                                () {
+                                  isSeller = false;
+                                },
+                              );
+                            }
                           },
                         );
                       },
@@ -136,6 +151,11 @@ class _AppState extends State<RegisterTranPage> {
                     },
                   ),
                 ],
+              ),
+              const TextInput(
+                textType: '거래 계좌',
+                hintText: '거래를 진행할 계좌 번호를 입력하세요.',
+                isDefault: false,
               ),
               const TextInput(
                 textType: '거래 금액',
