@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/my_page.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/widgets/list_card.dart';
 import 'package:ojakgyo/src/pages/register_tran_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
     Key? key,
-    required this.userName,
+    required this.user,
   }) : super(key: key);
 
-  final String userName;
+  final User user;
 
   @override
   State<MainPage> createState() => _AppState();
@@ -46,7 +47,8 @@ class _AppState extends State<MainPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyPage()),
+                                builder: (context) =>
+                                    MyPage(user: widget.user)),
                           )
                         },
                         child: Container(
@@ -79,7 +81,7 @@ class _AppState extends State<MainPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      widget.userName,
+                                      widget.user.name,
                                       style: const TextStyle(
                                         color: Color.fromARGB(221, 21, 21, 21),
                                         fontSize: 18,
@@ -122,7 +124,8 @@ class _AppState extends State<MainPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const RegisterTranPage()),
+                              builder: (context) =>
+                                  RegisterTranPage(user: widget.user)),
                         ),
                       },
                       child: Container(

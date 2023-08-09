@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/main_page.dart';
-// import 'dart:convert';
-// import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // String jsonString = await rootBundle.loadString('lib/src/testdata/user.json');
-  // Map<String, dynamic> user = json.decode(jsonString);
+  String jsonString = await rootBundle.loadString('lib/src/testdata/user.json');
+  Map<String, dynamic> userJson = json.decode(jsonString);
 
-  // runApp(const App());
+  User user = User.fromJson(userJson);
+
+  runApp(App(user: user));
 }
 
 class App extends StatefulWidget {
-  const App({super.key});
+  const App({Key? key, required this.user}) : super(key: key);
+
+  final User user;
 
   @override
   State<App> createState() => _AppState();
@@ -22,9 +27,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: MainPage(
-        userName: '손성아',
+        user: widget.user,
       ),
     );
   }

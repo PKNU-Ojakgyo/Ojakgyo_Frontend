@@ -6,9 +6,15 @@ import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/inquiry_btn.dart';
 import 'package:ojakgyo/widgets/text_input.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
 class RegisterTranPage extends StatefulWidget {
-  const RegisterTranPage({super.key});
+  const RegisterTranPage({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
 
   @override
   State<RegisterTranPage> createState() => _AppState();
