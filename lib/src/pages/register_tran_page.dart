@@ -153,6 +153,11 @@ class _AppState extends State<RegisterTranPage> {
                 ],
               ),
               const TextInput(
+                textType: '거래 계좌',
+                hintText: '거래를 진행할 계좌 번호를 입력하세요.',
+                isDefault: false,
+              ),
+              const TextInput(
                 textType: '거래 금액',
                 hintText: '거래할 물품의 금액을 입력하세요.',
                 isDefault: false,
