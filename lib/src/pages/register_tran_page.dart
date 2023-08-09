@@ -50,23 +50,29 @@ class _AppState extends State<RegisterTranPage> {
               const TextInput(
                 textType: '락커 ID',
                 hintText: '거래를 진행할 락커의 ID를 입력하세요.',
+                isDefault: false,
               ),
               const TextInput(
                 textType: '락커 주소',
                 hintText: '거래를 진행할 락커의 주소를 입력하세요.',
+                isDefault: false,
               ),
               const InquiryBtn(btnName: '락커 조회하기'),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 등록자 정보 입력'),
-              const TextInput(
+              TextInput(
                 textType: '거래 등록자 이름',
                 hintText: '거래 등록자의 이름을 입력하세요.',
+                isDefault: true,
+                defaultValue: widget.user.name,
               ),
-              const TextInput(
+              TextInput(
                 textType: '거래 등록자 전화번호',
                 hintText: '거래 등록자의 전화번호를 입력하세요.',
+                isDefault: true,
+                defaultValue: widget.user.phone,
               ),
               Row(
                 children: [
@@ -134,14 +140,17 @@ class _AppState extends State<RegisterTranPage> {
               const TextInput(
                 textType: '거래 금액',
                 hintText: '거래할 물품의 금액을 입력하세요.',
+                isDefault: false,
               ),
               const TextInput(
                 textType: '거래 물품',
                 hintText: '거래할 물품의 상품명을 입력하세요.',
+                isDefault: false,
               ),
               const TextInput(
                 textType: '물품 상태',
                 hintText: '거래할 물품의 상태를 간단하게 기재하세요.',
+                isDefault: false,
               ),
               const SizedBox(
                 height: 10,
@@ -150,6 +159,7 @@ class _AppState extends State<RegisterTranPage> {
               const TextInput(
                 textType: '거래 대상자 이름',
                 hintText: '거래 대상자의 이름을 입력하세요.',
+                isDefault: true,
               ),
               const InquiryBtn(btnName: '거래 대상자 조회'),
               const SizedBox(height: 20),
