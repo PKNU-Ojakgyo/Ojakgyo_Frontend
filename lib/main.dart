@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/main_page.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
-// MainPage(userName: '윤현진',),
-// MyPage(),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const App());
+  String jsonString = await rootBundle.loadString('lib/src/testdata/user.json');
+  Map<String, dynamic> userJson = json.decode(jsonString);
+
+  User user = User.fromJson(userJson);
+
+  runApp(App(user: user));
 }
 
 class App extends StatefulWidget {
-  const App({super.key});
+  const App({Key? key, required this.user}) : super(key: key);
+
+  final User user;
 
   @override
   State<App> createState() => _AppState();
@@ -18,9 +27,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: MainPage(
-        userName: '윤현진',
+        user: widget.user,
       ),
     );
   }

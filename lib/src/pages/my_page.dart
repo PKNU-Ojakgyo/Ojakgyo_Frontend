@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/my_page_btn.dart';
 import 'package:ojakgyo/widgets/line.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
 class MyPage extends StatefulWidget {
-  const MyPage({super.key});
+  const MyPage({Key? key, required this.user}) : super(key: key);
+
+  final User user;
 
   @override
   State<MyPage> createState() => _AppState();
@@ -30,7 +33,7 @@ class _AppState extends State<MyPage> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/images/profile1_img.png',
+                      widget.user.profile,
                       height: 90,
                       width: 90,
                     ),
@@ -39,21 +42,21 @@ class _AppState extends State<MyPage> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          '윤현진',
-                          style: TextStyle(
+                          widget.user.name,
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 21, 21, 21),
                             fontSize: 23,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 3,
                         ),
                         Text(
-                          '010-1234-5678',
-                          style: TextStyle(
+                          widget.user.phone,
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
                             fontSize: 18,
                             fontWeight: FontWeight.w400,

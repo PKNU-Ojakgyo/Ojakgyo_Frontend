@@ -60,6 +60,7 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/profile1_img.png
+    - lib/src/testdata/user.json
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
