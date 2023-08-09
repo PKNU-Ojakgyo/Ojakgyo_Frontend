@@ -4,16 +4,18 @@ class RegisterBtn extends StatelessWidget {
   const RegisterBtn({
     Key? key,
     required this.btnName,
+    required this.onPressed,
   }) : super(key: key);
 
   final String btnName;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 120,
       child: ElevatedButton(
-        onPressed: () => {print('click')},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
