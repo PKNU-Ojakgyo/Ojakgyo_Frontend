@@ -77,13 +77,13 @@ class _AppState extends State<RegisterTranPage> {
               TextInput(
                 textType: '락커 ID',
                 hintText: '거래를 진행할 락커의 ID를 입력하세요.',
-                isDefault: false,
+                isDefault: true,
                 controller: lockerIDController,
               ),
               TextInput(
                 textType: '락커 주소',
                 hintText: '거래를 진행할 락커의 주소를 입력하세요.',
-                isDefault: false,
+                isDefault: true,
                 controller: lockerAddressController,
               ),
               const InquiryBtn(btnName: '락커 조회하기'),
