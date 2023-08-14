@@ -33,32 +33,48 @@ class _AppState extends State<RegisterTranPage> {
     '하나은행',
     '부산은행'
   ];
+
   String? accountBankController = '카카오뱅크';
-  final TextEditingController lockerIDController = TextEditingController();
-  final TextEditingController lockerAddressController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController cellPhoneController = TextEditingController();
-  final TextEditingController accountController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController itemPriceController = TextEditingController();
-  final TextEditingController itemNameController = TextEditingController();
-  final TextEditingController itemConditionController = TextEditingController();
-  final TextEditingController buyerNameController = TextEditingController();
-  final TextEditingController buyerCellPhoneController =
-      TextEditingController();
+
+  late TextEditingController lockerIDController; // default
+  late TextEditingController lockerAddressController; // default
+  late TextEditingController nameController; // default : userInfo
+  late TextEditingController cellPhoneController; // default : userInfo
+  late TextEditingController accountController;
+  late TextEditingController priceController;
+  late TextEditingController itemPriceController;
+  late TextEditingController itemNameController;
+  late TextEditingController itemConditionController;
+  late TextEditingController buyerNameController; // default
+  late TextEditingController buyerCellPhoneController; // default
 
   void submitTranInfo() {
-    print("locker_id : ${lockerIDController.text}");
-    print("locker_address : ${lockerAddressController.text}");
-    print("name : ${nameController.text}");
-    print("cellphone : ${cellPhoneController.text}");
+    print("locker_id : ${lockerIDController.text}"); // default
+    print("locker_address : ${lockerAddressController.text}"); // default
+    print("name : ${nameController.text}"); // default
+    print("cellphone : ${cellPhoneController.text}"); // default
     print("account : ${accountController.text}");
     print("account_bank : $accountBankController");
     print("price : ${itemPriceController.text}");
     print("item : ${itemNameController.text}");
     print("condition : ${itemConditionController.text}");
-    print("buyer_name : ${buyerNameController.text}");
-    print("buyer_cellphone : ${buyerCellPhoneController.text}");
+    print("buyer_name : ${buyerNameController.text}"); // default
+    print("buyer_cellphone : ${buyerCellPhoneController.text}"); // default
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    lockerIDController = TextEditingController();
+    lockerAddressController = TextEditingController();
+    nameController = TextEditingController(text: widget.user.name);
+    cellPhoneController = TextEditingController(text: widget.user.phone);
+    accountController = TextEditingController();
+    itemPriceController = TextEditingController();
+    itemNameController = TextEditingController();
+    itemConditionController = TextEditingController();
+    buyerNameController = TextEditingController();
+    buyerCellPhoneController = TextEditingController();
   }
 
   @override
@@ -96,14 +112,12 @@ class _AppState extends State<RegisterTranPage> {
                 hintText: '거래 등록자의 이름을 입력하세요.',
                 isDefault: true,
                 controller: nameController,
-                defaultValue: widget.user.name,
               ),
               TextInput(
                 textType: '거래 등록자 전화번호',
                 hintText: '거래 등록자의 전화번호를 입력하세요.',
                 isDefault: true,
                 controller: cellPhoneController,
-                defaultValue: widget.user.phone,
               ),
               Row(
                 children: [

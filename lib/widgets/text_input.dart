@@ -7,14 +7,14 @@ class TextInput extends StatefulWidget {
     required this.hintText,
     required this.isDefault,
     required this.controller,
-    this.defaultValue = '',
+    // this.defaultValue = '',
   }) : super(key: key);
 
   final String textType;
   final String hintText;
   final bool isDefault;
   final TextEditingController controller;
-  final String defaultValue;
+  // final String defaultValue;
 
   @override
   State<TextInput> createState() => _TextInputState();
@@ -32,9 +32,7 @@ class _TextInputState extends State<TextInput> {
               : Colors.black,
         ),
         enabled: !widget.isDefault,
-        controller: widget.isDefault
-            ? TextEditingController(text: widget.defaultValue)
-            : widget.controller, // 초기값 설정
+        controller: widget.controller, // 초기값 설정
         decoration: InputDecoration(
           hintText: widget.hintText,
           border: const OutlineInputBorder(),
