@@ -60,9 +60,9 @@ class _AppState extends State<RegisterTranPage> {
     print("cellphone : ${cellPhoneController.text}"); // default
     print("isSeller : $isSeller");
     print("isbuyer : $isBuyer");
-    print("account : ${accountController.text}");
+    print("account : ${accountController.text}"); // 숫자로 입력받기
     print("account_bank : $accountBankController");
-    print("price : ${itemPriceController.text}");
+    print("price : ${itemPriceController.text}"); // 숫자로 입력받기
     print("item : ${itemNameController.text}");
     print("condition : ${itemConditionController.text}");
     print("buyer_name : ${buyerNameController.text}"); // default
@@ -253,12 +253,14 @@ class _AppState extends State<RegisterTranPage> {
                 hintText: '거래를 진행할 계좌 번호를 입력하세요.',
                 isDefault: false,
                 controller: accountController,
+                textInputType: TextInputType.number,
               ),
               TextInput(
                 textType: '거래 금액',
                 hintText: '거래할 물품의 금액을 입력하세요.',
                 isDefault: false,
                 controller: itemPriceController,
+                textInputType: TextInputType.number,
               ),
               TextInput(
                 textType: '거래 물품',

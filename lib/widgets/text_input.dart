@@ -7,6 +7,7 @@ class TextInput extends StatefulWidget {
     required this.hintText,
     required this.isDefault,
     required this.controller,
+    this.textInputType = TextInputType.text,
     // this.defaultValue = '',
   }) : super(key: key);
 
@@ -14,6 +15,7 @@ class TextInput extends StatefulWidget {
   final String hintText;
   final bool isDefault;
   final TextEditingController controller;
+  final TextInputType textInputType;
   // final String defaultValue;
 
   @override
@@ -31,6 +33,7 @@ class _TextInputState extends State<TextInput> {
               ? const Color.fromARGB(255, 77, 77, 77)
               : Colors.black,
         ),
+        keyboardType: widget.textInputType,
         enabled: !widget.isDefault,
         controller: widget.controller, // 초기값 설정
         decoration: InputDecoration(
