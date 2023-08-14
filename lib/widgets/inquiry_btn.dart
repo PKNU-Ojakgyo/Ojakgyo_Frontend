@@ -4,9 +4,11 @@ class InquiryBtn extends StatelessWidget {
   const InquiryBtn({
     Key? key,
     required this.btnName,
+    required this.returnWidget,
   }) : super(key: key);
 
   final String btnName;
+  final Widget returnWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,13 @@ class InquiryBtn extends StatelessWidget {
             padding:
                 MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
           ),
-          onPressed: () => {print('click')},
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return returnWidget;
+                });
+          },
           child: Column(
             children: [
               Text(
