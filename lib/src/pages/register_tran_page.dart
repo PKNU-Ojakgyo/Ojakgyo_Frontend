@@ -21,8 +21,11 @@ class RegisterTranPage extends StatefulWidget {
 }
 
 class _AppState extends State<RegisterTranPage> {
+  // 판매자 구매자 체크박스 활성화 state 변수
   bool? isSeller = false;
   bool? isBuyer = false;
+
+  // 거래 계좌 은행 선택 list
   final List<String> banks = [
     '카카오뱅크',
     '국민은행',
@@ -34,8 +37,10 @@ class _AppState extends State<RegisterTranPage> {
     '부산은행'
   ];
 
+  // 선택한 거래 계좌 은행
   String? accountBankController = '카카오뱅크';
 
+  // 각 textField에서 입력 받은 값을 저장할 변수
   late TextEditingController lockerIDController; // default
   late TextEditingController lockerAddressController; // default
   late TextEditingController nameController; // default : userInfo
