@@ -21,8 +21,11 @@ class RegisterTranPage extends StatefulWidget {
 }
 
 class _AppState extends State<RegisterTranPage> {
+  // 판매자 구매자 체크박스 활성화 state 변수
   bool? isSeller = false;
   bool? isBuyer = false;
+
+  // 거래 계좌 은행 선택 list
   final List<String> banks = [
     '카카오뱅크',
     '국민은행',
@@ -33,7 +36,98 @@ class _AppState extends State<RegisterTranPage> {
     '하나은행',
     '부산은행'
   ];
-  String? selectedBank = '카카오뱅크';
+
+  // 선택한 거래 계좌 은행
+  String? accountBankController = '카카오뱅크';
+
+  // 각 textField에서 입력 받은 값을 저장할 변수
+  late TextEditingController lockerIDController; // default
+  late TextEditingController lockerAddressController; // default
+  late TextEditingController nameController; // default : userInfo
+  late TextEditingController cellPhoneController; // default : userInfo
+  late TextEditingController accountController;
+  late TextEditingController priceController;
+  late TextEditingController itemPriceController;
+  late TextEditingController itemNameController;
+  late TextEditingController itemConditionController;
+  late TextEditingController buyerNameController; // default
+  late TextEditingController buyerCellPhoneController; // default
+
+  void submitTranInfo() {
+    print("locker_id : ${lockerIDController.text}"); // default
+    print("locker_address : ${lockerAddressController.text}"); // default
+    print("name : ${nameController.text}"); // default
+    print("cellphone : ${cellPhoneController.text}"); // default
+    print("isSeller : $isSeller");
+    print("isbuyer : $isBuyer");
+    print("account : ${accountController.text}"); // 숫자로 입력받기
+    print("account_bank : $accountBankController");
+    print("price : ${itemPriceController.text}"); // 숫자로 입력받기
+    print("item : ${itemNameController.text}");
+    print("condition : ${itemConditionController.text}");
+    print("buyer_name : ${buyerNameController.text}"); // default
+    print("buyer_cellphone : ${buyerCellPhoneController.text}"); // default
+
+    isNullTextField(
+      lockerIDController.text,
+      lockerAddressController.text,
+      nameController.text,
+      cellPhoneController.text,
+      accountController.text,
+      itemPriceController.text,
+      itemNameController.text,
+      itemConditionController.text,
+      buyerNameController.text,
+      buyerCellPhoneController.text,
+    );
+    isNullCheckbox(isSeller, isBuyer);
+  }
+
+  void isNullTextField(
+      String lockerID,
+      String lockerAddress,
+      String name,
+      String cellPhone,
+      String account,
+      String itemPrice,
+      String itemName,
+      String itemCondition,
+      String buyerName,
+      String buyerCellPhone) {
+    if (lockerID.isEmpty ||
+        lockerAddress.isEmpty ||
+        name.isEmpty ||
+        cellPhone.isEmpty ||
+        account.isEmpty ||
+        itemPrice.isEmpty ||
+        itemName.isEmpty ||
+        itemCondition.isEmpty ||
+        buyerName.isEmpty ||
+        buyerCellPhone.isEmpty) {
+      print('입력하지 않은 값이 존재합니다.');
+    }
+  }
+
+  void isNullCheckbox(bool? isSeller, bool? isBuyer) {
+    if ((isSeller == null && isBuyer == null) || (!isSeller! && !isBuyer!)) {
+      print("판매자와 구매자 중 하나를 선택해주세요.");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    lockerIDController = TextEditingController();
+    lockerAddressController = TextEditingController();
+    nameController = TextEditingController(text: widget.user.name);
+    cellPhoneController = TextEditingController(text: widget.user.phone);
+    accountController = TextEditingController();
+    itemPriceController = TextEditingController();
+    itemNameController = TextEditingController();
+    itemConditionController = TextEditingController();
+    buyerNameController = TextEditingController();
+    buyerCellPhoneController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +142,17 @@ class _AppState extends State<RegisterTranPage> {
               const MainTitle(mainTitle: '거래 등록'),
               const Line(),
               const SubTitle(subTitle: '락커 정보 입력'),
-              const TextInput(
+              TextInput(
                 textType: '락커 ID',
                 hintText: '거래를 진행할 락커의 ID를 입력하세요.',
-                isDefault: false,
+                isDefault: true,
+                controller: lockerIDController,
               ),
-              const TextInput(
+              TextInput(
                 textType: '락커 주소',
                 hintText: '거래를 진행할 락커의 주소를 입력하세요.',
-                isDefault: false,
+                isDefault: true,
+                controller: lockerAddressController,
               ),
               const InquiryBtn(btnName: '락커 조회하기'),
               const SizedBox(
@@ -67,13 +163,13 @@ class _AppState extends State<RegisterTranPage> {
                 textType: '거래 등록자 이름',
                 hintText: '거래 등록자의 이름을 입력하세요.',
                 isDefault: true,
-                defaultValue: widget.user.name,
+                controller: nameController,
               ),
               TextInput(
                 textType: '거래 등록자 전화번호',
                 hintText: '거래 등록자의 전화번호를 입력하세요.',
                 isDefault: true,
-                defaultValue: widget.user.phone,
+                controller: cellPhoneController,
               ),
               Row(
                 children: [
@@ -137,7 +233,7 @@ class _AppState extends State<RegisterTranPage> {
               Row(
                 children: [
                   DropdownButton(
-                    value: selectedBank,
+                    value: accountBankController,
                     items: banks.map((value) {
                       return DropdownMenuItem(
                         value: value,
@@ -146,47 +242,65 @@ class _AppState extends State<RegisterTranPage> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        selectedBank = value;
+                        accountBankController = value;
                       });
                     },
                   ),
                 ],
               ),
-              const TextInput(
+              TextInput(
                 textType: '거래 계좌',
                 hintText: '거래를 진행할 계좌 번호를 입력하세요.',
                 isDefault: false,
+                controller: accountController,
+                textInputType: TextInputType.number,
               ),
-              const TextInput(
+              TextInput(
                 textType: '거래 금액',
                 hintText: '거래할 물품의 금액을 입력하세요.',
                 isDefault: false,
+                controller: itemPriceController,
+                textInputType: TextInputType.number,
               ),
-              const TextInput(
+              TextInput(
                 textType: '거래 물품',
                 hintText: '거래할 물품의 상품명을 입력하세요.',
                 isDefault: false,
+                controller: itemNameController,
               ),
-              const TextInput(
+              TextInput(
                 textType: '물품 상태',
                 hintText: '거래할 물품의 상태를 간단하게 기재하세요.',
                 isDefault: false,
+                controller: itemConditionController,
               ),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 대상자 정보 입력'),
-              const TextInput(
+              TextInput(
                 textType: '거래 대상자 이름',
                 hintText: '거래 대상자의 이름을 입력하세요.',
                 isDefault: true,
+                controller: buyerNameController,
+              ),
+              TextInput(
+                textType: '거래 대상자 전화번호',
+                hintText: '거래 대상자의 전화번호를 입력하세요.',
+                isDefault: true,
+                controller: buyerCellPhoneController,
               ),
               const InquiryBtn(btnName: '거래 대상자 조회'),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  RegisterBtn(btnName: '등록하기'),
+                children: [
+                  RegisterBtn(
+                    btnName: '등록하기',
+                    onPressed: () {
+                      submitTranInfo();
+                    },
+                  ),
                 ],
               ),
               const SizedBox(
