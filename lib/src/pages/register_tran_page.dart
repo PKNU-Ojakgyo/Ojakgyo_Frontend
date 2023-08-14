@@ -58,6 +58,8 @@ class _AppState extends State<RegisterTranPage> {
     print("locker_address : ${lockerAddressController.text}"); // default
     print("name : ${nameController.text}"); // default
     print("cellphone : ${cellPhoneController.text}"); // default
+    print("isSeller : $isSeller");
+    print("isbuyer : $isBuyer");
     print("account : ${accountController.text}");
     print("account_bank : $accountBankController");
     print("price : ${itemPriceController.text}");
@@ -65,6 +67,44 @@ class _AppState extends State<RegisterTranPage> {
     print("condition : ${itemConditionController.text}");
     print("buyer_name : ${buyerNameController.text}"); // default
     print("buyer_cellphone : ${buyerCellPhoneController.text}"); // default
+
+    isNull(
+      lockerIDController.text,
+      lockerAddressController.text,
+      nameController.text,
+      cellPhoneController.text,
+      accountController.text,
+      itemPriceController.text,
+      itemNameController.text,
+      itemConditionController.text,
+      buyerNameController.text,
+      buyerCellPhoneController.text,
+    );
+  }
+
+  void isNull(
+      String lockerID,
+      String lockerAddress,
+      String name,
+      String cellPhone,
+      String account,
+      String itemPrice,
+      String itemName,
+      String itemCondition,
+      String buyerName,
+      String buyerCellPhone) {
+    if (lockerID.isEmpty ||
+        lockerAddress.isEmpty ||
+        name.isEmpty ||
+        cellPhone.isEmpty ||
+        account.isEmpty ||
+        itemPrice.isEmpty ||
+        itemName.isEmpty ||
+        itemCondition.isEmpty ||
+        buyerName.isEmpty ||
+        buyerCellPhone.isEmpty) {
+      print('입력하지 않은 값이 존재합니다.');
+    }
   }
 
   @override
