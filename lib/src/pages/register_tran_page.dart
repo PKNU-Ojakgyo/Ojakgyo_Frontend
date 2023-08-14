@@ -68,7 +68,7 @@ class _AppState extends State<RegisterTranPage> {
     print("buyer_name : ${buyerNameController.text}"); // default
     print("buyer_cellphone : ${buyerCellPhoneController.text}"); // default
 
-    isNull(
+    isNullTextField(
       lockerIDController.text,
       lockerAddressController.text,
       nameController.text,
@@ -80,9 +80,10 @@ class _AppState extends State<RegisterTranPage> {
       buyerNameController.text,
       buyerCellPhoneController.text,
     );
+    isNullCheckbox(isSeller, isBuyer);
   }
 
-  void isNull(
+  void isNullTextField(
       String lockerID,
       String lockerAddress,
       String name,
@@ -104,6 +105,12 @@ class _AppState extends State<RegisterTranPage> {
         buyerName.isEmpty ||
         buyerCellPhone.isEmpty) {
       print('입력하지 않은 값이 존재합니다.');
+    }
+  }
+
+  void isNullCheckbox(bool? isSeller, bool? isBuyer) {
+    if ((isSeller == null && isBuyer == null) || (!isSeller! && !isBuyer!)) {
+      print("판매자와 구매자 중 하나를 선택해주세요.");
     }
   }
 
