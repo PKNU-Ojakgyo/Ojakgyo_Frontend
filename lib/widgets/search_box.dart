@@ -16,10 +16,10 @@ class _SearchBoxState extends State<SearchBox> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: const Color.fromARGB(221, 53, 53, 53),
         ),
-        borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
       child: Row(
