@@ -7,7 +7,7 @@ import 'package:ojakgyo/widgets/inquiry_btn.dart';
 import 'package:ojakgyo/widgets/text_input.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/src/services/user_data.dart';
-import 'package:ojakgyo/widgets/inquriy_locker_dialog.dart';
+import 'package:ojakgyo/widgets/inquriy_locker_modal.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({
@@ -157,7 +157,7 @@ class _AppState extends State<RegisterTranPage> {
               ),
               const InquiryBtn(
                 btnName: '락커 조회하기',
-                returnWidget: InquiryLockerDialog(),
+                returnWidget: InquiryLockerModal(),
               ),
               const SizedBox(
                 height: 10,
@@ -296,7 +296,7 @@ class _AppState extends State<RegisterTranPage> {
               ),
               const InquiryBtn(
                 btnName: '거래 대상자 조회',
-                returnWidget: InquiryLockerDialog(),
+                returnWidget: InquiryLockerModal(),
               ),
               const SizedBox(height: 20),
               Row(
