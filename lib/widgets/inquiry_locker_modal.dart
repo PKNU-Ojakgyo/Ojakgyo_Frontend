@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/search_box.dart';
 import 'package:ojakgyo/widgets/locker_list.dart';
 
+// InquiryLockerModal
 class InquiryLockerModal extends StatefulWidget {
   const InquiryLockerModal({super.key});
 
@@ -10,6 +11,8 @@ class InquiryLockerModal extends StatefulWidget {
 }
 
 class _InquiryLockerModalState extends State<InquiryLockerModal> {
+  TextEditingController lockerSearchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -66,8 +69,11 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Material(
-                          child: SearchBox(),
+                        Material(
+                          child: SearchBox(
+                            controller: lockerSearchController,
+                            hintText: "예시) 부산광역시 용소로 45",
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
@@ -80,6 +86,26 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                   padding: const EdgeInsets.all(23),
                   child: Column(
                     children: const [
+                      LockerList(
+                        lockerID: 1,
+                        lockerAddress: '부산시 남구 용소로 45',
+                      ),
+                      LockerList(
+                        lockerID: 1,
+                        lockerAddress: '부산시 남구 용소로 45',
+                      ),
+                      LockerList(
+                        lockerID: 1,
+                        lockerAddress: '부산시 남구 용소로 45',
+                      ),
+                      LockerList(
+                        lockerID: 1,
+                        lockerAddress: '부산시 남구 용소로 45',
+                      ),
+                      LockerList(
+                        lockerID: 1,
+                        lockerAddress: '부산시 남구 용소로 45',
+                      ),
                       LockerList(
                         lockerID: 1,
                         lockerAddress: '부산시 남구 용소로 45',

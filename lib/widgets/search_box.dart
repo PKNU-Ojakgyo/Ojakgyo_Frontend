@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
 class SearchBox extends StatefulWidget {
-  const SearchBox({super.key});
+  const SearchBox({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+  final String hintText;
 
   @override
   State<SearchBox> createState() => _SearchBoxState();
 }
 
 class _SearchBoxState extends State<SearchBox> {
-  final List<String> category = ['아이디', '주소'];
-
-  String? selectedCategory = '아이디';
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,38 +28,15 @@ class _SearchBoxState extends State<SearchBox> {
       child: Row(
         children: [
           const SizedBox(
-            width: 10,
+            width: 15,
           ),
           Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                DropdownButton(
-                  value: selectedCategory,
-                  items: category.map((value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCategory = value;
-                    });
-                  },
-                  underline: Container(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            width: 2,
-          ),
-          const Expanded(
             flex: 3,
             child: TextField(
+              controller: widget.controller,
               decoration: InputDecoration(
                 border: InputBorder.none,
+                hintText: widget.hintText,
               ),
             ),
           ),

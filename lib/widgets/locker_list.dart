@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/widgets/choose_btn.dart';
 
 class LockerList extends StatefulWidget {
   const LockerList({
@@ -25,7 +26,7 @@ class _AppState extends State<LockerList> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(26),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Row(
@@ -51,6 +52,7 @@ class _AppState extends State<LockerList> {
                   height: 5,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       widget.lockerAddress,
@@ -60,11 +62,15 @@ class _AppState extends State<LockerList> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const ChooseBtn(),
                   ],
                 ),
               ],
             ),
           ),
+        ),
+        const SizedBox(
+          height: 20,
         ),
       ],
     );
