@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class LoginInput extends StatefulWidget {
-  const LoginInput({Key? key, required this.hintText}) : super(key: key);
+  const LoginInput({
+    Key? key,
+    required this.hintText,
+    required this.isPassword,
+  }) : super(key: key);
 
   final String hintText;
+  final bool isPassword;
 
   @override
   State<LoginInput> createState() => _LoginInputState();
@@ -26,6 +31,7 @@ class _LoginInputState extends State<LoginInput> {
           ),
           Expanded(
             child: TextField(
+              obscureText: widget.isPassword,
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 border: InputBorder.none,

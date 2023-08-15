@@ -42,12 +42,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const LoginInput(
               hintText: '아이디를 입력하세요.',
+              isPassword: false,
             ),
             const SizedBox(
               height: 15,
             ),
             const LoginInput(
               hintText: '비밀번호를 입력하세요.',
+              isPassword: true,
             ),
             const SizedBox(
               height: 40,
