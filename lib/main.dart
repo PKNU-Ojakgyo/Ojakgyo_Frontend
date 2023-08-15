@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ojakgyo/src/pages/main_page.dart';
+// import 'package:ojakgyo/src/pages/main_page.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:ojakgyo/src/services/user_data.dart';
+import 'package:ojakgyo/src/pages/start_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +28,11 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MainPage(
-        user: widget.user,
-      ),
+    return const MaterialApp(
+      home: StartPage(),
+      // home: MainPage(
+      //   user: widget.user,
+      // ),
     );
   }
 }
