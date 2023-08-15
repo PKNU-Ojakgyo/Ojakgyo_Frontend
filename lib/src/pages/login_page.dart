@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/services/login_callback.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/manage_member_btn.dart';
 import 'package:ojakgyo/widgets/login_input.dart';
@@ -11,6 +12,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController idController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  void submitLogin() {
+    String userName = idController.text;
+    String password = passwordController.text;
+
+    LoginCallback.loginCallback(userName, password);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +51,18 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 60,
             ),
-            const LoginInput(
+            LoginInput(
               hintText: '아이디를 입력하세요.',
               isPassword: false,
+              controller: idController,
             ),
             const SizedBox(
               height: 15,
             ),
-            const LoginInput(
+            LoginInput(
               hintText: '비밀번호를 입력하세요.',
               isPassword: true,
+              controller: passwordController,
             ),
             const SizedBox(
               height: 40,
@@ -57,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
             ManageMemberBtn(
               btnName: '로그인',
               onPressed: () {
-                print('로그인');
+                submitLogin();
               },
             ),
             const SizedBox(
