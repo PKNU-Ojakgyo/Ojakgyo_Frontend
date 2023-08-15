@@ -14,45 +14,63 @@ class _SearchBoxState extends State<SearchBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  DropdownButton(
-                    value: selectedCategory,
-                    items: category.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCategory = value;
-                      });
-                    },
-                    underline: Container(),
-                  ),
-                ],
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color.fromARGB(221, 53, 53, 53),
+        ),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+      ),
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                DropdownButton(
+                  value: selectedCategory,
+                  items: category.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCategory = value;
+                    });
+                  },
+                  underline: Container(),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 2,
+          ),
+          const Expanded(
+            flex: 3,
+            child: TextField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
               ),
             ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Expanded(
-              flex: 2,
-              child: TextField(),
-            ),
-          ],
-        ),
-      ],
+          ),
+          IconButton(
+              onPressed: () {
+                print("click");
+              },
+              icon: const Icon(
+                Icons.search,
+                size: 30,
+                color: Color.fromARGB(221, 53, 53, 53),
+              ))
+        ],
+      ),
     );
   }
 }

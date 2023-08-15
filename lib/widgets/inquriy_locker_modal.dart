@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/widgets/search_box.dart';
 
 class InquiryLockerModal extends StatefulWidget {
   const InquiryLockerModal({super.key});
@@ -22,6 +23,7 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
             ),
           ),
           child: SingleChildScrollView(
+            controller: scrollController,
             child: Padding(
               padding: const EdgeInsets.all(23),
               child: Column(
@@ -35,7 +37,7 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                         child: const Icon(
                           Icons.close,
                           size: 30,
-                          color: Color.fromARGB(255, 138, 138, 138),
+                          color: Color.fromARGB(221, 53, 53, 53),
                         ),
                       ),
                     ],
@@ -48,12 +50,18 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                     style: TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.w600,
+                      color: Color.fromARGB(221, 21, 21, 21),
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  // SearchBox(),
+                  const Material(
+                    child: SearchBox(),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
