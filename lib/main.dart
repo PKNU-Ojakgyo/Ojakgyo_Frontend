@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:ojakgyo/src/services/user_data.dart';
-// import 'package:ojakgyo/src/pages/start_page.dart';
-import 'package:ojakgyo/src/pages/login_page.dart';
+import 'package:ojakgyo/src/pages/start_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,8 +29,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: LoginPage(),
-      // home: StartPage(),
+      home: StartPage(),
       // home: MainPage(
       //   user: widget.user,
       // ),
