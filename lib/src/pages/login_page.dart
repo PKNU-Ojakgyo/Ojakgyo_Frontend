@@ -15,10 +15,25 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController idController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  bool? isFault;
+
   void submitLogin() {
     String userName = idController.text;
     String password = passwordController.text;
 
+    // 임시적인 testcode
+    if (userName == 'tjddk6662@naver.com' && password == 'huchujj') {
+      setState(() {
+        isFault = true;
+      });
+    } else {
+      setState(() {
+        isFault = false;
+      });
+    }
+
+    print(isFault);
+    // callback 함수 호출
     LoginCallback.loginCallback(userName, password);
   }
 
@@ -63,6 +78,15 @@ class _LoginPageState extends State<LoginPage> {
               hintText: '비밀번호를 입력하세요.',
               isPassword: true,
               controller: passwordController,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "입력하신 정보와 일치하는 정보가 없습니다.",
+              style: TextStyle(
+                color: isFault == false ? Colors.red : Colors.white,
+              ),
             ),
             const SizedBox(
               height: 40,
