@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/widgets/choose_btn.dart';
 
 class CounterPartyList extends StatefulWidget {
   const CounterPartyList({
@@ -180,6 +181,15 @@ class _AppState extends State<CounterPartyList> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          ChooseBtn(),
+                        ],
+                      )
                     ],
                   ),
                 ),
