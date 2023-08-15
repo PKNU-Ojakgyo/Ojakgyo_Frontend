@@ -13,7 +13,7 @@ class ManageMemberBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 280,
+      width: 230,
       height: 60,
       child: ElevatedButton(
         onPressed: onPressed,
