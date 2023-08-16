@@ -9,6 +9,7 @@ import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/widgets/inquiry_locker_modal.dart';
 import 'package:ojakgyo/widgets/inquiry_counterparty_modal.dart';
+import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({
@@ -69,23 +70,9 @@ class _AppState extends State<RegisterTranPage> {
     print("condition : ${itemConditionController.text}");
     print("buyer_name : ${buyerNameController.text}"); // default
     print("buyer_cellphone : ${buyerCellPhoneController.text}"); // default
-
-    isNullTextField(
-      lockerIDController.text,
-      lockerAddressController.text,
-      nameController.text,
-      cellPhoneController.text,
-      accountController.text,
-      itemPriceController.text,
-      itemNameController.text,
-      itemConditionController.text,
-      buyerNameController.text,
-      buyerCellPhoneController.text,
-    );
-    isNullCheckbox(isSeller, isBuyer);
   }
 
-  void isNullTextField(
+  bool isNullTextField(
       String lockerID,
       String lockerAddress,
       String name,
@@ -106,13 +93,17 @@ class _AppState extends State<RegisterTranPage> {
         itemCondition.isEmpty ||
         buyerName.isEmpty ||
         buyerCellPhone.isEmpty) {
-      print('입력하지 않은 값이 존재합니다.');
+      return false;
+    } else {
+      return true;
     }
   }
 
-  void isNullCheckbox(bool? isSeller, bool? isBuyer) {
+  bool isNullCheckbox(bool? isSeller, bool? isBuyer) {
     if ((isSeller == null && isBuyer == null) || (!isSeller! && !isBuyer!)) {
-      print("판매자와 구매자 중 하나를 선택해주세요.");
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -305,8 +296,43 @@ class _AppState extends State<RegisterTranPage> {
                 children: [
                   RegisterBtn(
                     btnName: '등록하기',
+                    isModal: false,
                     onPressed: () {
-                      submitTranInfo();
+                      if (isNullCheckbox(isSeller, isBuyer) &&
+                          isNullTextField(
+                            lockerIDController.text,
+                            lockerAddressController.text,
+                            nameController.text,
+                            cellPhoneController.text,
+                            accountController.text,
+                            itemPriceController.text,
+                            itemNameController.text,
+                            itemConditionController.text,
+                            buyerNameController.text,
+                            buyerCellPhoneController.text,
+                          )) {
+                        submitTranInfo();
+                        return;
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomAlertDialog(
+                              title: const Text('경고'),
+                              content: const Text('입력하지 않은 값이 존재합니다.'),
+                              actions: [
+                                RegisterBtn(
+                                  btnName: '확인',
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  isModal: true,
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     },
                   ),
                 ],
