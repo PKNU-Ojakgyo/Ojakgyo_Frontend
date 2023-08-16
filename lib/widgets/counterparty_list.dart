@@ -186,8 +186,13 @@ class _AppState extends State<CounterPartyList> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          ChooseBtn(),
+                        children: [
+                          ChooseBtn(
+                            title: '선택',
+                            onPressed: () {
+                              print('click');
+                            },
+                          ),
                         ],
                       )
                     ],

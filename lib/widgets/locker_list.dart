@@ -62,7 +62,12 @@ class _AppState extends State<LockerList> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const ChooseBtn(),
+                    ChooseBtn(
+                      title: '선택',
+                      onPressed: () {
+                        print('선택');
+                      },
+                    ),
                   ],
                 ),
               ],

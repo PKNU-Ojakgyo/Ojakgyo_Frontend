@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
 
 class ChooseBtn extends StatelessWidget {
-  const ChooseBtn({
+  ChooseBtn({
     Key? key,
+    required this.title,
+    required this.onPressed,
+    this.isNotChooseBtn = false,
   }) : super(key: key);
+
+  final String title;
+  final VoidCallback onPressed;
+  bool isNotChooseBtn;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 90,
-      height: 35,
+      width: isNotChooseBtn ? 140 : 90,
+      height: isNotChooseBtn ? 33 : 35,
       child: ElevatedButton(
-        onPressed: () {
-          print('click');
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: isNotChooseBtn
+                ? BorderRadius.circular(10)
+                : BorderRadius.circular(20),
           ),
           backgroundColor: const Color(0xFF4A6C88),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(6),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
           child: Text(
-            '선택',
+            title,
             style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontWeight: isNotChooseBtn ? FontWeight.w500 : FontWeight.w600,
             ),
           ),
         ),
