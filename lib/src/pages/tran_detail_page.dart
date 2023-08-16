@@ -4,14 +4,14 @@ import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
 
-class TranDetailView extends StatefulWidget {
-  const TranDetailView({super.key});
+class TranDetailPage extends StatefulWidget {
+  const TranDetailPage({super.key});
 
   @override
-  State<TranDetailView> createState() => _TranDetailViewState();
+  State<TranDetailPage> createState() => _TranDetailPageState();
 }
 
-class _TranDetailViewState extends State<TranDetailView> {
+class _TranDetailPageState extends State<TranDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
