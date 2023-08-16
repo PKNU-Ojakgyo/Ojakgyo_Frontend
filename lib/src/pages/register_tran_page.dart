@@ -10,6 +10,7 @@ import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/widgets/inquiry_locker_modal.dart';
 import 'package:ojakgyo/widgets/inquiry_counterparty_modal.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
+import 'package:ojakgyo/src/pages/main_page.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({
@@ -311,8 +312,38 @@ class _AppState extends State<RegisterTranPage> {
                             buyerNameController.text,
                             buyerCellPhoneController.text,
                           )) {
-                        submitTranInfo();
-                        return;
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomAlertDialog(
+                              title: const Text('알림'),
+                              content: const Text('거래를 등록하시겠습니까?'),
+                              actions: [
+                                RegisterBtn(
+                                  btnName: '확인',
+                                  onPressed: () {
+                                    submitTranInfo();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MainPage(user: widget.user),
+                                      ),
+                                    );
+                                  },
+                                  isModal: true,
+                                ),
+                                RegisterBtn(
+                                  btnName: '취소',
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  isModal: true,
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       } else {
                         showDialog(
                           context: context,
