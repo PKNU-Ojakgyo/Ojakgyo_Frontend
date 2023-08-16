@@ -5,15 +5,18 @@ class RegisterBtn extends StatelessWidget {
     Key? key,
     required this.btnName,
     required this.onPressed,
+    required this.isModal,
   }) : super(key: key);
 
   final String btnName;
   final VoidCallback onPressed;
+  final bool isModal;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 120,
+      width: isModal ? 80 : 120,
+      height: isModal ? 35 : null,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -23,12 +26,12 @@ class RegisterBtn extends StatelessWidget {
           backgroundColor: const Color(0xFF23225C),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: isModal ? const EdgeInsets.all(4) : const EdgeInsets.all(10),
           child: Text(
             btnName,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+            style: TextStyle(
+              fontSize: isModal ? 13 : 16,
+              fontWeight: isModal ? FontWeight.w500 : FontWeight.w600,
             ),
           ),
         ),
