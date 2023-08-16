@@ -5,6 +5,7 @@ import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
+import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 
 class TranDetailPage extends StatefulWidget {
   const TranDetailPage({super.key});
@@ -283,7 +284,28 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           RegisterBtn(
-                              btnName: '거래파기', onPressed: () {}, isModal: false)
+                              btnName: '거래파기',
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      title: const Text('경고'),
+                                      content: const Text('거래를 파기하시겠습니까?'),
+                                      actions: [
+                                        RegisterBtn(
+                                          btnName: '확인',
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          isModal: true,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              isModal: false)
                         ],
                       ),
                     ],
