@@ -3,6 +3,10 @@ import 'package:ojakgyo/src/services/login_callback.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/manage_member_btn.dart';
 import 'package:ojakgyo/widgets/login_input.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
+import 'dart:convert';
+import 'package:ojakgyo/src/pages/main_page.dart';
+import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool? isFault;
 
-  void submitLogin() {
+  void submitLogin(BuildContext context) async {
     String userName = idController.text;
     String password = passwordController.text;
 
@@ -26,13 +30,26 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         isFault = true;
       });
+      String jsonString =
+          await rootBundle.loadString('lib/src/testdata/user.json');
+      Map<String, dynamic> userJson = json.decode(jsonString);
+
+      User user = User.fromJson(userJson);
+
+      await Future.delayed(Duration.zero);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainPage(user: user),
+        ),
+      );
     } else {
       setState(() {
         isFault = false;
       });
     }
 
-    print(isFault);
     // callback 함수 호출
     LoginCallback.loginCallback(userName, password);
   }
@@ -94,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
             ManageMemberBtn(
               btnName: '로그인',
               onPressed: () {
-                submitLogin();
+                submitLogin(context);
               },
             ),
             const SizedBox(
