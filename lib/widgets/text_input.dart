@@ -35,7 +35,7 @@ class _TextInputState extends State<TextInput> {
         ),
         keyboardType: widget.textInputType,
         enabled: !widget.isDefault,
-        controller: widget.controller, // 초기값 설정
+        controller: widget.controller,
         decoration: InputDecoration(
           hintText: widget.hintText,
           border: const OutlineInputBorder(),
@@ -46,10 +46,10 @@ class _TextInputState extends State<TextInput> {
           ),
           focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(
-              color: Color(0xFFD8E8E9), // 또는 다른 적합한 색상
+              color: Color(0xFFD8E8E9),
             ),
           ),
-          hoverColor: Colors.transparent, // 마우스 호버 효과 제거
+          hoverColor: Colors.transparent,
           labelText: widget.textType,
           disabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(
