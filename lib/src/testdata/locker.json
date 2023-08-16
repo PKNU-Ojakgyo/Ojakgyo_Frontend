@@ -1,0 +1,15 @@
+[
+    {
+    "lockerid" : 1,
+    "address" : "부산광역시 용소로 45"
+    },
+    {
+        "lockerid" : 2,
+        "address" : "부산광역시 용소로 89"
+
+    },
+    {
+        "lockerid" : 3,
+        "address" : "부산광역시 용소로 147"
+    }
+]
