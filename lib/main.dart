@@ -22,9 +22,6 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: StartPage(),
-      // home: MainPage(
-      //   user: widget.user,
-      // ),
     );
   }
 }
