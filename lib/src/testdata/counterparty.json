@@ -1,0 +1,32 @@
+{
+    "email": "aaa",
+    "name": "personA",
+    "phone": "01011112232",
+    "dealLists": [
+        {
+            "item": "맥북",
+            "dealStatus": null,
+            "updateAt": null
+        },
+        {
+            "item": "맥북",
+            "dealStatus": null,
+            "updateAt": null
+        },
+        {
+            "item": "맥북",
+            "dealStatus": null,
+            "updateAt": null
+        },
+        {
+            "item": "맥북",
+            "dealStatus": null,
+            "updateAt": null
+        },
+        {
+            "item": "맥북",
+            "dealStatus": null,
+            "updateAt": null
+        }
+    ]
+}
