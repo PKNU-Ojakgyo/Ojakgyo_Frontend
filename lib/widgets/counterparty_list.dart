@@ -18,7 +18,7 @@ class CounterPartyList extends StatefulWidget {
 }
 
 class _AppState extends State<CounterPartyList> {
-  bool isToggled = false;
+  bool isToggled = true;
   late String modifiedPhone = '';
 
   @override
@@ -130,73 +130,175 @@ class _AppState extends State<CounterPartyList> {
                             ),
                           ],
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                       ],
                     ),
                   ],
                 ),
                 Visibility(
                   visible: isToggled,
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: const [
-                                  Text("거래 상태 : "),
-                                  Text(
-                                    "거래 완료",
-                                    style: TextStyle(color: Colors.redAccent),
+                  child: SizedBox(
+                    height: 300,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Text("거래 상태 : "),
+                                      Text(
+                                        "거래 완료",
+                                        style:
+                                            TextStyle(color: Colors.redAccent),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: const [
+                                      Text("거래 일시 : "),
+                                      Text("2023.08.16 01:29"),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: const [
+                                      Text("거래 물품 : "),
+                                      Text("고등어 인형"),
+                                    ],
                                   ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: const [
-                                  Text("거래 일시 : "),
-                                  Text("2023.08.16 01:29"),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          //////////////////////////////////////////////////////////
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Text("거래 상태 : "),
+                                      Text(
+                                        "거래 완료",
+                                        style:
+                                            TextStyle(color: Colors.redAccent),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: const [
+                                      Text("거래 일시 : "),
+                                      Text("2023.08.16 01:29"),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: const [
+                                      Text("거래 물품 : "),
+                                      Text("고등어 인형"),
+                                    ],
+                                  ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: const [
-                                  Text("거래 물품 : "),
-                                  Text("고등어 인형"),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Text("거래 상태 : "),
+                                      Text(
+                                        "거래 완료",
+                                        style:
+                                            TextStyle(color: Colors.redAccent),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: const [
+                                      Text("거래 일시 : "),
+                                      Text("2023.08.16 01:29"),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: const [
+                                      Text("거래 물품 : "),
+                                      Text("고등어 인형"),
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ChooseBtn(
-                            title: '선택',
-                            onPressed: () {
-                              print('click');
-                            },
+                          const SizedBox(
+                            height: 15,
                           ),
+                          /////////////////////////////////////////////////////////
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ChooseBtn(
+                      title: '선택',
+                      onPressed: () {
+                        print('click');
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

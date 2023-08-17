@@ -122,6 +122,25 @@ class _AppState extends State<ListCard> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          const SizedBox(
+                            width: 3,
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_outlined,
+                            color: Color.fromARGB(221, 53, 53, 53),
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 3,
+                          ),
+                          const Text(
+                            '구매자',
+                            style: TextStyle(
+                              color: Color.fromARGB(221, 53, 53, 53),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
                       Row(
