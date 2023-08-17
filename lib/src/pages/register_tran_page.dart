@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/pages/write_contract_page.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
@@ -111,16 +112,16 @@ class _AppState extends State<RegisterTranPage> {
   @override
   void initState() {
     super.initState();
-    lockerIDController = TextEditingController();
-    lockerAddressController = TextEditingController();
+    lockerIDController = TextEditingController(text: 'test');
+    lockerAddressController = TextEditingController(text: 'test');
     nameController = TextEditingController(text: widget.user.name);
     cellPhoneController = TextEditingController(text: widget.user.phone);
-    accountController = TextEditingController();
-    itemPriceController = TextEditingController();
-    itemNameController = TextEditingController();
-    itemConditionController = TextEditingController();
-    buyerNameController = TextEditingController();
-    buyerCellPhoneController = TextEditingController();
+    accountController = TextEditingController(text: 'test');
+    itemPriceController = TextEditingController(text: 'test');
+    itemNameController = TextEditingController(text: 'test');
+    itemConditionController = TextEditingController(text: 'test');
+    buyerNameController = TextEditingController(text: 'test');
+    buyerCellPhoneController = TextEditingController(text: 'test');
   }
 
   @override
@@ -322,13 +323,46 @@ class _AppState extends State<RegisterTranPage> {
                                 RegisterBtn(
                                   btnName: '확인',
                                   onPressed: () {
-                                    submitTranInfo();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            MainPage(user: widget.user),
-                                      ),
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomAlertDialog(
+                                          title: const Text('알림'),
+                                          content: const Text(
+                                              '50,000원 이상의 거래이므로\n 간이계약서 작성이 가능합니다. \n간이계약서를 작성하시겠습니까?'),
+                                          actions: [
+                                            RegisterBtn(
+                                              btnName: '예',
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        WriteContractPage(
+                                                            user: widget.user),
+                                                  ),
+                                                );
+                                              },
+                                              isModal: true,
+                                            ),
+                                            RegisterBtn(
+                                              btnName: '아니요',
+                                              onPressed: () {
+                                                submitTranInfo();
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MainPage(
+                                                            user: widget.user),
+                                                  ),
+                                                );
+                                              },
+                                              isModal: true,
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     );
                                   },
                                   isModal: true,
