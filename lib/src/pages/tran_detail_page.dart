@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/pages/view_contract_page.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
@@ -6,9 +7,15 @@ import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
 class TranDetailPage extends StatefulWidget {
-  const TranDetailPage({super.key});
+  const TranDetailPage({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
 
   @override
   State<TranDetailPage> createState() => _TranDetailPageState();
@@ -39,7 +46,13 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         ChooseBtn(
                           title: '간이계약서 조회하기',
                           onPressed: () {
-                            print('클릭');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ViewContractPage(user: widget.user),
+                              ),
+                            );
                           },
                           isNotChooseBtn: true,
                         ),

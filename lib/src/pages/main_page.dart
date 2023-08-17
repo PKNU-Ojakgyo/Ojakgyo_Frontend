@@ -147,28 +147,32 @@ class _AppState extends State<MainPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const ListCard(
+                    ListCard(
+                      user: widget.user,
                       tranState: '거래완료',
                       tranDate: '2023.08.03 14:10',
                       tranPerson: '후추동생',
                       tranItem: '그리니즈',
                       tranPrice: '4,000원',
                     ),
-                    const ListCard(
+                    ListCard(
+                      user: widget.user,
                       tranState: '거래중',
                       tranDate: '2023.08.03 14:10',
                       tranPerson: '윤여울',
                       tranItem: '램',
                       tranPrice: '30,000원',
                     ),
-                    const ListCard(
+                    ListCard(
+                      user: widget.user,
                       tranState: '거래중',
                       tranDate: '2023.08.04 16:11',
                       tranPerson: '유정권',
                       tranItem: '맥북',
                       tranPrice: '1,500,000원',
                     ),
-                    const ListCard(
+                    ListCard(
+                      user: widget.user,
                       tranState: '거래완료',
                       tranDate: '2023.08.04 19:00',
                       tranPerson: '이오정',
