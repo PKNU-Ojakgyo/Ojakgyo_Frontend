@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/tran_detail_page.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
 class ListCard extends StatefulWidget {
   const ListCard({
     Key? key,
+    required this.user,
     required this.tranState, // 거래 상태
     required this.tranDate, // 거래 날짜
     required this.tranPerson, // 거래 대상
@@ -11,6 +13,7 @@ class ListCard extends StatefulWidget {
     required this.tranPrice, // 거래 가격
   }) : super(key: key);
 
+  final User user;
   final String tranState;
   final String tranDate;
   final String tranPerson;
@@ -31,7 +34,7 @@ class _AppState extends State<ListCard> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const TranDetailPage(),
+                builder: (context) => TranDetailPage(user: widget.user),
               ),
             );
           },
