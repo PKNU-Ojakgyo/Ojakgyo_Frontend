@@ -5,6 +5,7 @@ import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
+import 'package:ojakgyo/widgets/modify_contract.dart';
 
 class WriteContractPage extends StatefulWidget {
   const WriteContractPage({super.key});
@@ -14,6 +15,16 @@ class WriteContractPage extends StatefulWidget {
 }
 
 class _WriteContractPageState extends State<WriteContractPage> {
+  TextEditingController tranContractController = TextEditingController(
+      text:
+          '(1) 거래 계약은 판매자와 구매자가 상호 합의하여 체결하는 것으로 합니다.\n(2) 판매자는 물품의 소유권을 보유하고 있으며, 구매자는 해당 물품을 구매하고자 합니다.\n(3) 판매자는 구매자에게 물품을 인도하며, 구매자는 물품 대금을 지불합니다.');
+  TextEditingController indemnificationLiabilityController = TextEditingController(
+      text:
+          '(1) 판매자는 물품을 인도하기 전, 물품의 하자나 손상 여부를 확인하여야 합니다.\n(2) 구매자는 물품 수령 후, 물품에 대한 하자나 손상 여부를 확인하여야 합니다.\n(3) 물품의 소유권이 구매자에게 이전되기 전까지 발생하는 모든 손실, 손해, 멸실 또는 파손 등의 책임은 판매자가 부담합니다.\n(4) 물품의 소유권이 구매자에게 이전된 후 발생하는 모든 손실, 손해, 멸실 또는 파손 등의 책임은 구매자가 부담합니다.');
+  TextEditingController etcController = TextEditingController(
+      text:
+          '(1) 이 계약서에 명시되지 않은 사항에 대해서는 상호 합의하여 정합니다.\n(2) 이 계약서는 양 당사자가 본 계약서 내용을 충분히 이해하고 서명함으로써 효력이 발생합니다.\n(3) 이 계약서는 전자 문서로서도 유효하며, 이 경우에는 양 당사자가 전자 서명함으로써 효력이 발생합니다.\n(4) 본 계약서는 복사본으로도 효력이 있습니다.');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +106,9 @@ class _WriteContractPageState extends State<WriteContractPage> {
                   ),
                 ],
               ),
-              //계약서 내용
+              ModifyContract(
+                controller: tranContractController,
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -111,7 +124,9 @@ class _WriteContractPageState extends State<WriteContractPage> {
                   ),
                 ],
               ),
-              //계약서 내용
+              ModifyContract(
+                controller: indemnificationLiabilityController,
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -127,7 +142,9 @@ class _WriteContractPageState extends State<WriteContractPage> {
                   ),
                 ],
               ),
-              //계약서 내용
+              ModifyContract(
+                controller: etcController,
+              ),
               const SizedBox(
                 height: 10,
               ),
