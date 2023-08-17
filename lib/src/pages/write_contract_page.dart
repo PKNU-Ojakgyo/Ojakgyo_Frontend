@@ -6,9 +6,13 @@ import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/modify_contract.dart';
+import 'package:ojakgyo/src/pages/main_page.dart';
+import 'package:ojakgyo/src/services/user_data.dart';
 
 class WriteContractPage extends StatefulWidget {
-  const WriteContractPage({super.key});
+  const WriteContractPage({Key? key, required this.user}) : super(key: key);
+
+  final User user;
 
   @override
   State<WriteContractPage> createState() => _WriteContractPageState();
@@ -198,7 +202,13 @@ class _WriteContractPageState extends State<WriteContractPage> {
                                 RegisterBtn(
                                   btnName: '예',
                                   onPressed: () {
-                                    print('작성 완료');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MainPage(user: widget.user),
+                                      ),
+                                    );
                                   },
                                   isModal: true,
                                 ),

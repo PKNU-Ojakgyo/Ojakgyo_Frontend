@@ -338,7 +338,8 @@ class _AppState extends State<RegisterTranPage> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const WriteContractPage(),
+                                                        WriteContractPage(
+                                                            user: widget.user),
                                                   ),
                                                 );
                                               },
