@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ChooseBtn extends StatelessWidget {
-  ChooseBtn({
+  final String title;
+  final VoidCallback onPressed;
+  final bool isNotChooseBtn;
+
+  const ChooseBtn({
     Key? key,
     required this.title,
     required this.onPressed,
     this.isNotChooseBtn = false,
   }) : super(key: key);
-
-  final String title;
-  final VoidCallback onPressed;
-  bool isNotChooseBtn;
 
   @override
   Widget build(BuildContext context) {

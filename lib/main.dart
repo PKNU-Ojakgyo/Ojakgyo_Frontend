@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:ojakgyo/src/pages/main_page.dart';
+// import 'package:ojakgyo/src/pages/test_page.dart';
 import 'package:ojakgyo/src/pages/start_page.dart';
 
 void main() async {

@@ -4,10 +4,11 @@ import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
+import 'package:ojakgyo/widgets/signpad.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/modify_contract.dart';
-import 'package:ojakgyo/src/pages/main_page.dart';
 import 'package:ojakgyo/src/services/user_data.dart';
+import 'package:ojakgyo/src/pages/main_page.dart';
 
 class WriteContractPage extends StatefulWidget {
   const WriteContractPage({Key? key, required this.user}) : super(key: key);
@@ -43,14 +44,14 @@ class _WriteContractPageState extends State<WriteContractPage> {
               const MainTitle(mainTitle: '간이계약서 작성'),
               const Line(),
               const SubTitle(subTitle: '거래 당사자의 정보'),
-              Row(
+              const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           '판매자',
                           style: TextStyle(
@@ -67,7 +68,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           '구매자',
                           style: TextStyle(
@@ -99,8 +100,8 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 계약'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Icon(Icons.priority_high_outlined, size: 20),
                   Text(
                     '수정이 가능합니다.',
@@ -117,8 +118,8 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '배상 및 책임 등'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Icon(Icons.priority_high_outlined, size: 20),
                   Text(
                     '수정이 가능합니다.',
@@ -135,8 +136,8 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '기타 사항'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Icon(Icons.priority_high_outlined, size: 20),
                   Text(
                     '수정이 가능합니다.',
@@ -159,8 +160,8 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '판매자'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text('김철수'),
                   SizedBox(
                     width: 10,
@@ -173,8 +174,8 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '구매자'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text('박영희'),
                   SizedBox(
                     width: 10,
@@ -202,12 +203,13 @@ class _WriteContractPageState extends State<WriteContractPage> {
                                 RegisterBtn(
                                   btnName: '예',
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            MainPage(user: widget.user),
-                                      ),
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return SignPad(
+                                          user: widget.user,
+                                        );
+                                      },
                                     );
                                   },
                                   isModal: true,
