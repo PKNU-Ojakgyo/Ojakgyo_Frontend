@@ -82,17 +82,23 @@ class _AppState extends State<MyPage> {
               MyPageBtn(
                 btnType: btnType,
               ),
-            const SizedBox(
-              height: 160,
-            ),
-            const Line(),
-            const SizedBox(
-              height: 24,
-            ),
-            Image.asset(
-              'assets/images/logo.png',
-              height: 70,
-              width: 150,
+            Expanded(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Line(),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    Image.asset(
+                      'assets/images/logo.png',
+                      height: 70,
+                      width: 150,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
