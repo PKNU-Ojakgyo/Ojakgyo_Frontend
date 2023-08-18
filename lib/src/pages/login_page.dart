@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:ojakgyo/src/services/login_callback.dart';
+import 'package:ojakgyo/src/services/login_post.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/manage_member_btn.dart';
 import 'package:ojakgyo/widgets/login_input.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
-import 'dart:convert';
 import 'package:ojakgyo/src/pages/main_page.dart';
-import 'package:flutter/services.dart';
+import 'package:ojakgyo/src/services/auth_token_get.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final LoginPost _loginPost = LoginPost();
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,39 +19,28 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController idController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  bool? isFault;
+  Object errorMessage = '';
+  late String authToken;
 
-  void submitLogin(BuildContext context) async {
-    String userName = idController.text;
-    String password = passwordController.text;
+  void submit(BuildContext context) async {
+    String userName = idController.text; // 아이디
+    String password = passwordController.text; // 비밀번호
 
-    // 임시적인 testcode
-    if (userName == 'tjddk6662@naver.com' && password == 'huchujj') {
-      setState(() {
-        isFault = true;
-      });
-      String jsonString =
-          await rootBundle.loadString('lib/src/testdata/user.json');
-      Map<String, dynamic> userJson = json.decode(jsonString);
-
-      User user = User.fromJson(userJson);
-
-      await Future.delayed(Duration.zero);
-
-      Navigator.push(
+    try {
+      Map<String, dynamic> headers =
+          await widget._loginPost.loginPost(userName, password);
+      authToken = headers['Authorization'];
+      AuthTokenGet.setToken(authToken);
+      if (!mounted) return;
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => MainPage(user: user),
-        ),
+        MaterialPageRoute(builder: (context) => MainPage(authToken: authToken)),
       );
-    } else {
+    } catch (e) {
       setState(() {
-        isFault = false;
+        errorMessage = e;
       });
     }
-
-    // callback 함수 호출
-    LoginCallback.loginCallback(userName, password);
   }
 
   @override
@@ -99,19 +88,21 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              "입력하신 정보와 일치하는 정보가 없습니다.",
-              style: TextStyle(
-                color: isFault == false ? Colors.red : Colors.white,
+            SizedBox(
+              height: 100,
+              child: Column(
+                children: [
+                  Text(
+                    errorMessage.toString(),
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 40,
             ),
             ManageMemberBtn(
               btnName: '로그인',
               onPressed: () {
-                submitLogin(context);
+                submit(context);
               },
             ),
             const SizedBox(

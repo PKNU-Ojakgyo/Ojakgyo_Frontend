@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/my_page.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/widgets/list_card.dart';
 import 'package:ojakgyo/src/pages/register_tran_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
     Key? key,
-    required this.user,
+    required this.headers,
   }) : super(key: key);
 
-  final User user;
+  final Map<String, dynamic> headers;
 
   @override
   State<MainPage> createState() => _AppState();
