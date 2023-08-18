@@ -82,10 +82,10 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(23),
+                const Padding(
+                  padding: EdgeInsets.all(23),
                   child: Column(
-                    children: const [
+                    children: [
                       CounterPartyList(
                         counterPartyID: 'rnjsdbwjd@naver.com',
                         counterPartyName: '권유정',
