@@ -8,7 +8,6 @@ import 'package:ojakgyo/widgets/signpad.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/modify_contract.dart';
 import 'package:ojakgyo/src/services/user_data.dart';
-import 'package:ojakgyo/src/pages/main_page.dart';
 
 class WriteContractPage extends StatefulWidget {
   const WriteContractPage({Key? key, required this.user}) : super(key: key);
@@ -20,9 +19,6 @@ class WriteContractPage extends StatefulWidget {
 }
 
 class _WriteContractPageState extends State<WriteContractPage> {
-  TextEditingController tranContractController = TextEditingController(
-      text:
-          '(1) 거래 계약은 판매자와 구매자가 상호 합의하여 체결하는 것으로 합니다.\n(2) 판매자는 물품의 소유권을 보유하고 있으며, 구매자는 해당 물품을 구매하고자 합니다.\n(3) 판매자는 구매자에게 물품을 인도하며, 구매자는 물품 대금을 지불합니다.');
   TextEditingController indemnificationLiabilityController = TextEditingController(
       text:
           '(1) 판매자는 물품을 인도하기 전, 물품의 하자나 손상 여부를 확인하여야 합니다.\n(2) 구매자는 물품 수령 후, 물품에 대한 하자나 손상 여부를 확인하여야 합니다.\n(3) 물품의 소유권이 구매자에게 이전되기 전까지 발생하는 모든 손실, 손해, 멸실 또는 파손 등의 책임은 판매자가 부담합니다.\n(4) 물품의 소유권이 구매자에게 이전된 후 발생하는 모든 손실, 손해, 멸실 또는 파손 등의 책임은 구매자가 부담합니다.');
