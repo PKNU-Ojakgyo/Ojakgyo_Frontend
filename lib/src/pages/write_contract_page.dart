@@ -100,20 +100,9 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 계약'),
-              const Row(
-                children: [
-                  Icon(Icons.priority_high_outlined, size: 20),
-                  Text(
-                    '수정이 가능합니다.',
-                    style: TextStyle(
-                      color: Color.fromARGB(221, 53, 53, 53),
-                    ),
-                  ),
-                ],
-              ),
-              ModifyContract(
-                controller: tranContractController,
-              ),
+              const Text('(1) 거래 계약은 판매자와 구매자가 상호 합의하여 체결하는 것으로 합니다.'),
+              const Text('(2) 판매자는 물품의 소유권을 보유하고 있으며, 구매자는 해당 물품을 구매하고자 합니다.'),
+              const Text('(3) 판매자는 구매자에게 물품을 인도하며, 구매자는 물품 대금을 지불합니다.'),
               const SizedBox(
                 height: 10,
               ),
