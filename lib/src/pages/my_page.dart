@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/my_page_btn.dart';
 import 'package:ojakgyo/widgets/line.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
 
 class MyPage extends StatefulWidget {
-  const MyPage({Key? key, required this.user}) : super(key: key);
-
-  final User user;
+  const MyPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyPage> createState() => _AppState();
@@ -33,30 +32,30 @@ class _AppState extends State<MyPage> {
                 child: Row(
                   children: [
                     Image.asset(
-                      widget.user.profile,
+                      'assets/images/profile1_img.png',
                       height: 90,
                       width: 90,
                     ),
                     const SizedBox(
                       width: 18,
                     ),
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.user.name,
-                          style: const TextStyle(
+                          'UserName',
+                          style: TextStyle(
                             color: Color.fromARGB(221, 21, 21, 21),
                             fontSize: 23,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           height: 3,
                         ),
                         Text(
-                          widget.user.phone,
-                          style: const TextStyle(
+                          'UserPhone',
+                          style: TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
@@ -83,21 +82,19 @@ class _AppState extends State<MyPage> {
                 btnType: btnType,
               ),
             Expanded(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Line(),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      height: 70,
-                      width: 150,
-                    ),
-                  ],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Line(),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: 70,
+                    width: 150,
+                  ),
+                ],
               ),
             ),
           ],

@@ -115,7 +115,7 @@ class _AppState extends State<CounterPartyList> {
                         Row(
                           children: [
                             const Icon(
-                              Icons.phone,
+                              Icons.phone_android,
                               color: Color.fromARGB(221, 53, 53, 53),
                               size: 18,
                             ),
@@ -152,12 +152,12 @@ class _AppState extends State<CounterPartyList> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
+                            child: const Padding(
+                              padding: EdgeInsets.all(15),
                               child: Column(
                                 children: [
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 상태 : "),
                                       Text(
                                         "거래 완료",
@@ -166,20 +166,20 @@ class _AppState extends State<CounterPartyList> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 3,
                                   ),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 일시 : "),
                                       Text("2023.08.16 01:29"),
                                     ],
                                   ),
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 3,
                                   ),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 물품 : "),
                                       Text("고등어 인형"),
                                     ],
@@ -197,12 +197,12 @@ class _AppState extends State<CounterPartyList> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
+                            child: const Padding(
+                              padding: EdgeInsets.all(15),
                               child: Column(
                                 children: [
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 상태 : "),
                                       Text(
                                         "거래 완료",
@@ -211,20 +211,20 @@ class _AppState extends State<CounterPartyList> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 3,
                                   ),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 일시 : "),
                                       Text("2023.08.16 01:29"),
                                     ],
                                   ),
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 3,
                                   ),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 물품 : "),
                                       Text("고등어 인형"),
                                     ],
@@ -241,12 +241,12 @@ class _AppState extends State<CounterPartyList> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
+                            child: const Padding(
+                              padding: EdgeInsets.all(15),
                               child: Column(
                                 children: [
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 상태 : "),
                                       Text(
                                         "거래 완료",
@@ -255,20 +255,20 @@ class _AppState extends State<CounterPartyList> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 3,
                                   ),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 일시 : "),
                                       Text("2023.08.16 01:29"),
                                     ],
                                   ),
-                                  const SizedBox(
+                                  SizedBox(
                                     height: 3,
                                   ),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Text("거래 물품 : "),
                                       Text("고등어 인형"),
                                     ],

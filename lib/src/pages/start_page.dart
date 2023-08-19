@@ -38,9 +38,7 @@ class StartPage extends StatelessWidget {
             ),
             ManageMemberBtn(
               btnName: '회원가입',
-              onPressed: () {
-                print('회원가입');
-              },
+              onPressed: () {},
             ),
           ],
         ),

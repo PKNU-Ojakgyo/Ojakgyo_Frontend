@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+// import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:ojakgyo/src/services/login_post.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/manage_member_btn.dart';
 import 'package:ojakgyo/widgets/login_input.dart';
 import 'package:ojakgyo/src/pages/main_page.dart';
-import 'package:ojakgyo/src/services/auth_token_get.dart';
+// import 'package:ojakgyo/src/services/auth_token_get.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
-
-  final LoginPost _loginPost = LoginPost();
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,22 +18,20 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController idController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  final LoginPost _loginPost = LoginPost();
   Object errorMessage = '';
-  late String authToken;
 
   void submit(BuildContext context) async {
     String userName = idController.text; // 아이디
     String password = passwordController.text; // 비밀번호
 
     try {
-      Map<String, dynamic> headers =
-          await widget._loginPost.loginPost(userName, password);
-      authToken = headers['Authorization'];
-      AuthTokenGet.setToken(authToken);
+      await _loginPost.loginPost(userName, password);
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainPage(authToken: authToken)),
+        MaterialPageRoute(builder: (context) => const MainPage()),
       );
     } catch (e) {
       setState(() {
@@ -89,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 10,
             ),
             SizedBox(
-              height: 100,
+              height: 70,
               child: Column(
                 children: [
                   Text(

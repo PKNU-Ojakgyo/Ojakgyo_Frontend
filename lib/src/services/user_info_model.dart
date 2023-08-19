@@ -1,10 +1,10 @@
-class MainData {
+class UserInfoModel {
   User? user;
   List<UserDealLists>? userDealLists;
 
-  MainData({this.user, this.userDealLists});
+  UserInfoModel({this.user, this.userDealLists});
 
-  MainData.fromJson(Map<String, dynamic> json) {
+  UserInfoModel.fromJson(Map<String, dynamic> json) {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     if (json['userDealLists'] != null) {
       userDealLists = <UserDealLists>[];

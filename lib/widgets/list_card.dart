@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/pages/tran_detail_page.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
 
 class ListCard extends StatefulWidget {
   const ListCard({
     Key? key,
-    required this.user,
     required this.tranState, // 거래 상태
     required this.tranDate, // 거래 날짜
-    required this.tranPerson, // 거래 대상
     required this.tranItem, // 거래 품목
     required this.tranPrice, // 거래 가격
+    required this.seller,
+    required this.buyer,
+    required this.dealId,
   }) : super(key: key);
 
-  final User user;
-  final String tranState;
-  final String tranDate;
-  final String tranPerson;
-  final String tranItem;
-  final String tranPrice;
+  final String? tranState;
+  final String? tranDate;
+  final String? tranItem;
+  final String? tranPrice;
+  final String? seller;
+  final String? buyer;
+  final int? dealId;
 
   @override
   State<ListCard> createState() => _AppState();
 }
 
 class _AppState extends State<ListCard> {
+  Map<String, Color> stateColor = {
+    '거래 전': const Color.fromARGB(255, 0, 194, 84),
+    '거래 중': const Color(0xFFE46F2A),
+    '거래 완료': const Color(0xFF00ADC2),
+    '거래 취소': const Color.fromARGB(255, 121, 121, 121),
+  };
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,7 +42,9 @@ class _AppState extends State<ListCard> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TranDetailPage(user: widget.user),
+                builder: (context) => TranDetailPage(
+                  dealId: widget.dealId,
+                ),
               ),
             );
           },
@@ -51,7 +61,7 @@ class _AppState extends State<ListCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.tranDate,
+                        widget.tranDate ?? 'Unknown',
                         style: const TextStyle(
                           color: Color.fromARGB(221, 53, 53, 53),
                           fontSize: 16,
@@ -63,15 +73,13 @@ class _AppState extends State<ListCard> {
                           Icon(
                             Icons.circle,
                             size: 12,
-                            color: widget.tranState == '거래중'
-                                ? const Color(0xFFE46F2A)
-                                : const Color(0xFF00ADC2),
+                            color: stateColor[widget.tranState],
                           ),
                           const SizedBox(
                             width: 5,
                           ),
                           Text(
-                            widget.tranState,
+                            widget.tranState ?? 'Unknown',
                             style: const TextStyle(
                               color: Color.fromARGB(221, 53, 53, 53),
                               fontSize: 16,
@@ -89,7 +97,7 @@ class _AppState extends State<ListCard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        widget.tranItem,
+                        widget.tranItem ?? 'Unknown',
                         style: const TextStyle(
                           color: Color.fromARGB(221, 21, 21, 21),
                           fontSize: 23,
@@ -115,7 +123,7 @@ class _AppState extends State<ListCard> {
                             width: 3,
                           ),
                           Text(
-                            widget.tranPerson,
+                            widget.seller ?? 'Unknown',
                             style: const TextStyle(
                               color: Color.fromARGB(221, 53, 53, 53),
                               fontSize: 16,
@@ -133,9 +141,9 @@ class _AppState extends State<ListCard> {
                           const SizedBox(
                             width: 3,
                           ),
-                          const Text(
-                            '구매자',
-                            style: TextStyle(
+                          Text(
+                            widget.buyer ?? 'Unknown',
+                            style: const TextStyle(
                               color: Color.fromARGB(221, 53, 53, 53),
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -154,7 +162,7 @@ class _AppState extends State<ListCard> {
                             width: 3,
                           ),
                           Text(
-                            widget.tranPrice,
+                            widget.tranPrice ?? 'Unknown',
                             style: const TextStyle(
                               color: Color.fromARGB(221, 53, 53, 53),
                               fontSize: 16,

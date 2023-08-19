@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 
 class ViewContractPage extends StatefulWidget {
-  const ViewContractPage({Key? key, required this.user}) : super(key: key);
-
-  final User user;
+  const ViewContractPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ViewContractPage> createState() => _ViewContractPageState();
@@ -49,21 +48,21 @@ class _ViewContractPageState extends State<ViewContractPage> {
               const SizedBox(
                 height: 26,
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   MainTitle(mainTitle: '간이계약서'),
                 ],
               ),
               const SubTitle(subTitle: '거래 당사자의 정보'),
-              Row(
+              const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           '판매자',
                           style: TextStyle(
@@ -80,7 +79,7 @@ class _ViewContractPageState extends State<ViewContractPage> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           '구매자',
                           style: TextStyle(
@@ -136,8 +135,8 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '판매자'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text('김철수'),
                   SizedBox(
                     width: 10,
@@ -150,8 +149,8 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '구매자'),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text('박영희'),
                   SizedBox(
                     width: 10,

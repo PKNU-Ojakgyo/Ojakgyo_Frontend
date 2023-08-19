@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:ojakgyo/src/pages/test_page.dart';
-// import 'package:ojakgyo/src/pages/start_page.dart';
-import 'package:ojakgyo/src/pages/login_page.dart';
+import 'package:ojakgyo/src/pages/start_page.dart';
+// import 'package:ojakgyo/src/pages/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +21,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // home: StartPage(),
-      home: LoginPage(),
+    return const MaterialApp(
+      home: StartPage(),
+      // home: LoginPage(),
     );
   }
 }

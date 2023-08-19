@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:ojakgyo/src/pages/view_contract_page.dart';
+
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
@@ -7,15 +11,18 @@ import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
+
+import 'package:ojakgyo/src/services/user_info_model.dart';
+import 'package:ojakgyo/src/services/auth_token_get.dart';
+import 'package:ojakgyo/src/services/tran_detail_model.dart';
 
 class TranDetailPage extends StatefulWidget {
   const TranDetailPage({
     Key? key,
-    required this.user,
+    required this.dealId,
   }) : super(key: key);
 
-  final User user;
+  final int? dealId;
 
   @override
   State<TranDetailPage> createState() => _TranDetailPageState();
@@ -24,8 +31,31 @@ class TranDetailPage extends StatefulWidget {
 class _TranDetailPageState extends State<TranDetailPage> {
   bool isChecked = false;
 
+  late Map<String, dynamic> responseData;
+  late TranDetailModel tranDetail;
+
+  void sendToken() async {
+    AuthTokenGet authToken = AuthTokenGet();
+    http.Response response = await authToken
+        .authTokenCallBack('deal-details?dealId=${widget.dealId}');
+
+    if (response.statusCode == 200) {
+      responseData = json.decode(response.body);
+      tranDetail = TranDetailModel.fromJson(responseData);
+    } else {
+      throw Exception('데이터를 불러오지 못했습니다.');
+    }
+  }
+
+  UserInfoModel userInfo = UserInfoModel();
+
+  bool identifySeller() {
+    return tranDetail.sellerPhone == userInfo.user?.phone;
+  }
+
   @override
   Widget build(BuildContext context) {
+    sendToken();
     return Scaffold(
       appBar: const BackNavBar(),
       backgroundColor: const Color(0xFF23225C),
@@ -49,8 +79,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewContractPage(user: widget.user),
+                                builder: (context) => const ViewContractPage(),
                               ),
                             );
                           },
@@ -64,12 +93,19 @@ class _TranDetailPageState extends State<TranDetailPage> {
                     const SubTitle(subTitle: '입금 현황'),
                     Row(
                       children: [
-                        const Text(
-                          '판매자',
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
+                        identifySeller()
+                            ? const Text(
+                                '판매자',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            : const Text(
+                                '구매자',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
                         SizedBox(
                           width: 30,
                           height: 24,
@@ -84,22 +120,36 @@ class _TranDetailPageState extends State<TranDetailPage> {
                             },
                           ),
                         ),
-                        const Text(
-                          "입금 확인",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
+                        identifySeller()
+                            ? const Text(
+                                "입금 확인",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            : const Text(
+                                "입금 완료",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
                       ],
                     ),
                     Row(
                       children: [
-                        Text(
-                          '구매자의 입금을 확인 후 체크 해주세요.',
-                          style: TextStyle(
-                            color: isChecked ? Colors.white : Colors.red,
-                          ),
-                        ),
+                        identifySeller()
+                            ? Text(
+                                '구매자의 입금을 확인 후 체크 해주세요.',
+                                style: TextStyle(
+                                  color: isChecked ? Colors.white : Colors.red,
+                                ),
+                              )
+                            : Text(
+                                '판매자에게 입금 완료 후 체크 해주세요.',
+                                style: TextStyle(
+                                  color: isChecked ? Colors.white : Colors.red,
+                                ),
+                              )
                       ],
                     ),
                     const SizedBox(
@@ -139,8 +189,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '락커 정보'),
                         ],
                       ),
-                      const Text('락커 아이디 : 1'),
-                      const Text('락커 주소 : 부산광역시시 용소로 45'),
+                      Text('락커 아이디 : ${tranDetail.lockerId}'),
+                      Text('락커 주소 : ${tranDetail.lockerAddress}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -159,8 +209,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '판매자 정보'),
                         ],
                       ),
-                      const Text('판매자 이름 : 손후추'),
-                      const Text('판매자 전화번호 : 010-1234-5678'),
+                      Text('판매자 이름 : ${tranDetail.sellerName}'),
+                      Text('판매자 전화번호 : ${tranDetail.sellerPhone}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -179,8 +229,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '구매자 정보'),
                         ],
                       ),
-                      const Text('구매자 이름 : 이오정'),
-                      const Text('구매자 전화번호 : 010-8765-4321'),
+                      Text('구매자 이름 : ${tranDetail.buyerName}'),
+                      Text('구매자 전화번호 : ${tranDetail.buyerPhone}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -199,11 +249,11 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '거래 정보'),
                         ],
                       ),
-                      const Text('거래 은행 : 카카오뱅크'),
-                      const Text('거래 계좌 : 123456789'),
-                      const Text('거래 금액 : 10,000원'),
-                      const Text('거래 물품 : 고등어 인형'),
-                      const Text('물품 상태 : 아주 좋음 굿굿'),
+                      Text('거래 은행 : ${tranDetail.bank}'),
+                      Text('거래 계좌 : ${tranDetail.account}'),
+                      Text('거래 금액 : ${tranDetail.price}원'),
+                      Text('거래 물품 : ${tranDetail.itemName}'),
+                      Text('물품 상태 : ${tranDetail.condition}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -222,12 +272,19 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '입금 현황'),
                         ],
                       ),
-                      const Text(
-                        '입금전',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
+                      tranDetail.depositStatus == false
+                          ? const Text(
+                              '입금 전',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            )
+                          : const Text(
+                              '입금 완료',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -247,21 +304,21 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         ],
                       ),
                       Row(
-                        children: const [
-                          Text('2023.08.17 01:34'),
-                          SizedBox(
+                        children: [
+                          Text(tranDetail.createLockerPwdAt ?? 'Unknown'),
+                          const SizedBox(
                             width: 10,
                           ),
                           Text(
-                            '1234',
-                            style: TextStyle(
+                            tranDetail.lockerPassword ?? 'Unknown',
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           )
                         ],
                       ),
                       const Text(
-                        '입금전',
+                        '입금 확인 후 비밀번호가 공개됩니다.',
                         style: TextStyle(
                           color: Colors.red,
                         ),
@@ -284,9 +341,9 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '거래 상태'),
                         ],
                       ),
-                      const Text(
-                        '거래 중',
-                        style: TextStyle(
+                      Text(
+                        tranDetail.dealStatus ?? 'Unknown',
+                        style: const TextStyle(
                           color: Colors.red,
                         ),
                       ),
@@ -308,9 +365,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                                       actions: [
                                         RegisterBtn(
                                           btnName: '확인',
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
+                                          onPressed: () {},
                                           isModal: true,
                                         ),
                                       ],

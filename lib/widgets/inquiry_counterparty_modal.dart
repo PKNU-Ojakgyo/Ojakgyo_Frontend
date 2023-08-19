@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:ojakgyo/widgets/counterparty_list.dart';
 import 'package:ojakgyo/widgets/search_box.dart';
+
+import 'package:ojakgyo/src/services/auth_token_get.dart';
+
+import 'package:ojakgyo/src/services/dealer_info_model.dart';
 
 class InquiryCounterPartyModal extends StatefulWidget {
   const InquiryCounterPartyModal({super.key});
@@ -12,6 +19,24 @@ class InquiryCounterPartyModal extends StatefulWidget {
 
 class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
   TextEditingController counterPartyController = TextEditingController();
+  DealerInfoModel dealerInfo = DealerInfoModel();
+
+  Future<void> search(String dealerEmail) async {
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal/search-dealer?dealerEmail=$dealerEmail');
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        dealerInfo = DealerInfoModel.fromJson(responseData);
+      } else {
+        throw Exception('데이터를 불러오지 못했습니다.');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +98,7 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                           child: SearchBox(
                             controller: counterPartyController,
                             hintText: '예시) 홍길동',
+                            onPressed: () async {},
                           ),
                         ),
                         const SizedBox(

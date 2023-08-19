@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+
 import 'package:ojakgyo/widgets/search_box.dart';
 import 'package:ojakgyo/widgets/locker_list.dart';
+
+// import 'package:ojakgyo/src/services/auth_token_get.dart';
+import 'package:ojakgyo/src/services/dealer_info_model.dart';
 
 // InquiryLockerModal
 class InquiryLockerModal extends StatefulWidget {
@@ -72,7 +78,8 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                         Material(
                           child: SearchBox(
                             controller: lockerSearchController,
-                            hintText: "예시) 부산광역시 용소로 45",
+                            hintText: "락커 아이디를 입력하세요.",
+                            onPressed: () {},
                           ),
                         ),
                         const SizedBox(
@@ -82,10 +89,10 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(23),
+                const Padding(
+                  padding: EdgeInsets.all(23),
                   child: Column(
-                    children: const [
+                    children: [
                       LockerList(
                         lockerID: 1,
                         lockerAddress: '부산시 남구 용소로 45',
