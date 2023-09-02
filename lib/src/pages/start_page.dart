@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/manage_member_btn.dart';
 import 'package:ojakgyo/src/pages/login_page.dart';
+import 'package:ojakgyo/src/pages/sign_up_page.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -42,7 +43,7 @@ class StartPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
+                    builder: (context) => const SignUpPage(),
                   ),
                 );
               },

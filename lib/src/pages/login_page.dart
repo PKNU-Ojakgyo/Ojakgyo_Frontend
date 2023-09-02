@@ -38,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
 
       await Future.delayed(Duration.zero);
 
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
