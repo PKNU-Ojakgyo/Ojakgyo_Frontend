@@ -39,7 +39,12 @@ class StartPage extends StatelessWidget {
             ManageMemberBtn(
               btnName: '회원가입',
               onPressed: () {
-                print('회원가입');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(),
+                  ),
+                );
               },
             ),
           ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
-import 'dart:convert';
-import 'dart:ui' as ui;
+// import 'dart:convert';
+// import 'dart:ui' as ui;
 import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/src/pages/main_page.dart';
 
@@ -72,12 +72,12 @@ class _SignPadState extends State<SignPad> {
           btnName: '확인',
           onPressed: () async {
             // 이미지 파일로 받아서 Encode
-            final signatureImage =
-                await _signaturePadGlobalKey.currentState!.toImage();
-            final signatureBytes =
-                await signatureImage.toByteData(format: ui.ImageByteFormat.png);
-            final signatureBase64 =
-                base64Encode(signatureBytes!.buffer.asUint8List());
+            // final signatureImage =
+            //     await _signaturePadGlobalKey.currentState!.toImage();
+            // final signatureBytes =
+            //     await signatureImage.toByteData(format: ui.ImageByteFormat.png);
+            // final signatureBase64 =
+            //     base64Encode(signatureBytes!.buffer.asUint8List());
 
             Navigator.push(
               context,
