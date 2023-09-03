@@ -5,6 +5,7 @@ import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/text_input.dart';
 import 'package:ojakgyo/widgets/duplicate_btn.dart';
+import 'package:ojakgyo/widgets/manage_member_btn.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -117,6 +118,23 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 80,
+                ),
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 70,
+                  width: 150,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ManageMemberBtn(
+                  btnName: '회원가입',
+                  onPressed: () {
+                    print('회원가입');
+                  },
                 ),
                 const SizedBox(
                   height: 80,
