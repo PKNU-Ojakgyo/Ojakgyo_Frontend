@@ -122,14 +122,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 80,
                 ),
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 70,
-                  width: 150,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 ManageMemberBtn(
                   btnName: '회원가입',
                   onPressed: () {
@@ -137,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                 ),
                 const SizedBox(
-                  height: 80,
+                  height: 40,
                 ),
                 Image.asset(
                   'assets/images/logo.png',
