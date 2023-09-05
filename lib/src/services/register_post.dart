@@ -3,7 +3,8 @@ import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'dart:convert';
 
 class RegisterPost {
-  final String baseURL = 'http://13.125.232.188:8080';
+  final String baseURL =
+      'http://ec2-15-164-170-1.ap-northeast-2.compute.amazonaws.com:8080';
 
   Future<int> registerPost({
     required String bank,

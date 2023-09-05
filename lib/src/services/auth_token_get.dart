@@ -21,10 +21,12 @@ class AuthTokenManage {
 }
 
 class AuthTokenGet {
-  final String baseURL = 'http://13.125.232.188:8080';
+  final String baseURL =
+      'http://ec2-15-164-170-1.ap-northeast-2.compute.amazonaws.com:8080';
 
   Future<http.Response> authTokenCallBack(String page) async {
     if (AuthTokenManage.isLoggedIn()) {
+      print('로그인 성공');
       final authToken = AuthTokenManage.getToken();
       print('auth : $authToken');
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:ojakgyo/src/pages/test_page.dart';
 import 'package:ojakgyo/src/pages/start_page.dart';
-// import 'package:ojakgyo/src/pages/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

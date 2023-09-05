@@ -24,10 +24,13 @@ class _AppState extends State<MainPage> {
     AuthTokenGet authToken = AuthTokenGet();
     try {
       http.Response response = await authToken.authTokenCallBack('user/main');
+      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
-        userInfo = UserInfoModel.fromJson(responseData);
+        setState(() {
+          userInfo = UserInfoModel.fromJson(responseData);
+        });
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
       }
@@ -37,9 +40,15 @@ class _AppState extends State<MainPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     sendToken();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     List<UserDealLists>? dealLists = userInfo.userDealLists;
+    print('dealLists : $dealLists');
 
     Map<String, dynamic> dealState = {
       'BEFORE': '거래 전',
@@ -177,20 +186,25 @@ class _AppState extends State<MainPage> {
                       height: 20,
                     ),
                     dealLists != null && dealLists.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: dealLists.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final items = dealLists[index];
-                              return ListCard(
-                                tranState: dealState[items.dealStatus],
-                                tranDate: items.createAt,
-                                tranItem: items.item,
-                                tranPrice: items.price.toString(),
-                                seller: items.sellerName,
-                                buyer: items.buyerName,
-                                dealId: items.dealId,
-                              );
-                            },
+                        ? Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: dealLists.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final items = dealLists[index];
+                                  return ListCard(
+                                    tranState: dealState[items.dealStatus],
+                                    tranDate: items.createAt,
+                                    tranItem: items.item,
+                                    tranPrice: items.price.toString(),
+                                    seller: items.sellerName,
+                                    buyer: items.buyerName,
+                                    dealId: items.dealId,
+                                  );
+                                },
+                              ),
+                            ],
                           )
                         : const Text(
                             '등록된 거래 정보가 없습니다.',

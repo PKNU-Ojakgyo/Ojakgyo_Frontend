@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final LoginPost _loginPost = LoginPost();
   Object errorMessage = '';
+  bool isError = false;
 
   void submit(BuildContext context) async {
     String userName = idController.text; // 아이디
@@ -28,6 +29,10 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _loginPost.loginPost(userName, password);
 
+      setState(() {
+        isError = false;
+      });
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
@@ -35,7 +40,8 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       setState(() {
-        errorMessage = e;
+        errorMessage = '회원정보가 일치하지 않습니다.';
+        isError = true;
       });
     }
   }
@@ -91,7 +97,9 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     errorMessage.toString(),
-                    style: const TextStyle(color: Colors.red),
+                    style: isError
+                        ? const TextStyle(color: Colors.red)
+                        : const TextStyle(color: Colors.white),
                   ),
                 ],
               ),
