@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ojakgyo/src/pages/tran_detail_page.dart';
 
 class ListCard extends StatefulWidget {
   const ListCard({
@@ -37,144 +36,132 @@ class _AppState extends State<ListCard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TranDetailPage(
-                  dealId: widget.dealId,
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFD8E8E9),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(26),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.tranDate ?? 'Unknown',
+                      style: const TextStyle(
+                        color: Color.fromARGB(221, 53, 53, 53),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 12,
+                          color: stateColor[widget.tranState],
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          widget.tranState ?? 'Unknown',
+                          style: const TextStyle(
+                            color: Color.fromARGB(221, 53, 53, 53),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFD8E8E9),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(26),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.tranDate ?? 'Unknown',
-                        style: const TextStyle(
+                const SizedBox(
+                  height: 7,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.tranItem ?? 'Unknown',
+                      style: const TextStyle(
+                        color: Color.fromARGB(221, 21, 21, 21),
+                        fontSize: 23,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person,
                           color: Color.fromARGB(221, 53, 53, 53),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          size: 20,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.circle,
-                            size: 12,
-                            color: stateColor[widget.tranState],
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            widget.tranState ?? 'Unknown',
-                            style: const TextStyle(
-                              color: Color.fromARGB(221, 53, 53, 53),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.tranItem ?? 'Unknown',
-                        style: const TextStyle(
-                          color: Color.fromARGB(221, 21, 21, 21),
-                          fontSize: 23,
-                          fontWeight: FontWeight.w900,
+                        const SizedBox(
+                          width: 3,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.person,
+                        Text(
+                          widget.seller ?? 'Unknown',
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
-                            size: 20,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            widget.seller ?? 'Unknown',
-                            style: const TextStyle(
-                              color: Color.fromARGB(221, 53, 53, 53),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          const Icon(
-                            Icons.arrow_forward_outlined,
+                        ),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_outlined,
+                          color: Color.fromARGB(221, 53, 53, 53),
+                          size: 15,
+                        ),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          widget.buyer ?? 'Unknown',
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
-                            size: 15,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            widget.buyer ?? 'Unknown',
-                            style: const TextStyle(
-                              color: Color.fromARGB(221, 53, 53, 53),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.attach_money,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.attach_money,
+                          color: Color.fromARGB(221, 53, 53, 53),
+                          size: 20,
+                        ),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          widget.tranPrice ?? 'Unknown',
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
-                            size: 20,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            widget.tranPrice ?? 'Unknown',
-                            style: const TextStyle(
-                              color: Color.fromARGB(221, 53, 53, 53),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

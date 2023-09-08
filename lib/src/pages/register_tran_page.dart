@@ -159,9 +159,12 @@ class _AppState extends State<RegisterTranPage> {
                 isDefault: true,
                 controller: lockerAddressController,
               ),
-              const InquiryBtn(
+              InquiryBtn(
                 btnName: '락커 조회하기',
-                returnWidget: InquiryLockerModal(),
+                returnWidget: InquiryLockerModal(
+                  lockerIdController: lockerIDController,
+                  lockerAddressController: lockerAddressController,
+                ),
               ),
               const SizedBox(
                 height: 10,

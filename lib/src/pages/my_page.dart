@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/my_page_btn.dart';
 import 'package:ojakgyo/widgets/line.dart';
+import 'package:ojakgyo/src/services/user_info_model.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({
@@ -13,6 +14,8 @@ class MyPage extends StatefulWidget {
 }
 
 class _AppState extends State<MyPage> {
+  UserInfoModel userInfo = UserInfoModel();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,23 +42,23 @@ class _AppState extends State<MyPage> {
                     const SizedBox(
                       width: 18,
                     ),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'UserName',
-                          style: TextStyle(
+                          userInfo.user?.name ?? 'Unknown',
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 21, 21, 21),
                             fontSize: 23,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 3,
                         ),
                         Text(
-                          'UserPhone',
-                          style: TextStyle(
+                          userInfo.user?.phone ?? 'Unknown',
+                          style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
                             fontSize: 18,
                             fontWeight: FontWeight.w400,

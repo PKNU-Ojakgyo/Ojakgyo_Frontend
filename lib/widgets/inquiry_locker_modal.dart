@@ -1,23 +1,87 @@
 import 'package:flutter/material.dart';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:ojakgyo/widgets/search_box.dart';
 import 'package:ojakgyo/widgets/locker_list.dart';
 
-// import 'package:ojakgyo/src/services/auth_token_get.dart';
-import 'package:ojakgyo/src/services/dealer_info_model.dart';
+import 'package:ojakgyo/src/services/auth_token_get.dart';
 
 // InquiryLockerModal
 class InquiryLockerModal extends StatefulWidget {
-  const InquiryLockerModal({super.key});
+  const InquiryLockerModal({
+    super.key,
+    required this.lockerIdController,
+    required this.lockerAddressController,
+  });
+
+  final TextEditingController lockerIdController;
+  final TextEditingController lockerAddressController;
 
   @override
   State<InquiryLockerModal> createState() => _InquiryLockerModalState();
 }
 
 class _InquiryLockerModalState extends State<InquiryLockerModal> {
+  late List<Map<String, dynamic>> responseData;
+  List<Map<String, dynamic>> lockerData = [];
+
   TextEditingController lockerSearchController = TextEditingController();
+
+  Future<void> sendToken() async {
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response =
+          await authToken.authTokenCallBack('deal/lockers');
+      print(jsonDecode(response.body));
+
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> responseData =
+            List<Map<String, dynamic>>.from(
+          json.decode(response.body) as List<dynamic>,
+        );
+
+        setState(() {
+          lockerData = responseData;
+        });
+      } else {
+        throw Exception('데이터를 불러오지 못했습니다.');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> searchLocker() async {
+    String address = lockerSearchController.text;
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal/search-locker-address?address=$address');
+      print(jsonDecode(response.body));
+
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> responseData =
+            List<Map<String, dynamic>>.from(
+          json.decode(response.body) as List<dynamic>,
+        );
+
+        setState(() {
+          lockerData = responseData;
+        });
+      } else {
+        throw Exception('데이터를 불러오지 못했습니다.');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sendToken();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +143,9 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                           child: SearchBox(
                             controller: lockerSearchController,
                             hintText: "락커 아이디를 입력하세요.",
-                            onPressed: () {},
+                            onPressed: () {
+                              searchLocker();
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -89,33 +155,23 @@ class _InquiryLockerModalState extends State<InquiryLockerModal> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(23),
+                Padding(
+                  padding: const EdgeInsets.all(23),
                   child: Column(
                     children: [
-                      LockerList(
-                        lockerID: 1,
-                        lockerAddress: '부산시 남구 용소로 45',
-                      ),
-                      LockerList(
-                        lockerID: 1,
-                        lockerAddress: '부산시 남구 용소로 45',
-                      ),
-                      LockerList(
-                        lockerID: 1,
-                        lockerAddress: '부산시 남구 용소로 45',
-                      ),
-                      LockerList(
-                        lockerID: 1,
-                        lockerAddress: '부산시 남구 용소로 45',
-                      ),
-                      LockerList(
-                        lockerID: 1,
-                        lockerAddress: '부산시 남구 용소로 45',
-                      ),
-                      LockerList(
-                        lockerID: 1,
-                        lockerAddress: '부산시 남구 용소로 45',
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: lockerData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final items = lockerData[index];
+                          return LockerList(
+                            lockerID: items['lockerId'],
+                            lockerAddress: items['address'],
+                            lockerIdController: widget.lockerIdController,
+                            lockerAddressController:
+                                widget.lockerAddressController,
+                          );
+                        },
                       ),
                     ],
                   ),

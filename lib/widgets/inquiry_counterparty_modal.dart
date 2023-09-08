@@ -18,18 +18,29 @@ class InquiryCounterPartyModal extends StatefulWidget {
 }
 
 class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
-  TextEditingController counterPartyController = TextEditingController();
-  DealerInfoModel dealerInfo = DealerInfoModel();
+  late Map<String, dynamic> responseData;
+  DealerInfoModel dealerInfo = DealerInfoModel.fromJson({});
 
-  Future<void> search(String dealerEmail) async {
+  TextEditingController counterPartyController = TextEditingController();
+  bool isSearched = false;
+
+  Future<void> searchDealer() async {
+    String email = counterPartyController.text;
     AuthTokenGet authToken = AuthTokenGet();
     try {
       http.Response response = await authToken
-          .authTokenCallBack('deal/search-dealer?dealerEmail=$dealerEmail');
+          .authTokenCallBack('deal/search-dealer?dealerEmail=$email');
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
-        dealerInfo = DealerInfoModel.fromJson(responseData);
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
+
+        setState(() {
+          dealerInfo = DealerInfoModel.fromJson(responseData);
+          isSearched = true;
+        });
+
+        print(responseData);
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
       }
@@ -98,7 +109,9 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                           child: SearchBox(
                             controller: counterPartyController,
                             hintText: '예시) 홍길동',
-                            onPressed: () async {},
+                            onPressed: () {
+                              searchDealer();
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -108,18 +121,21 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(23),
+                Padding(
+                  padding: const EdgeInsets.all(23),
                   child: Column(
                     children: [
-                      CounterPartyList(
-                        counterPartyID: 'rnjsdbwjd@naver.com',
-                        counterPartyName: '권유정',
-                        counterPartyPhone: '010-9876-5432',
-                      )
+                      isSearched
+                          ? CounterPartyList(
+                              counterPartyID: dealerInfo.email ?? 'Unknown',
+                              counterPartyName: dealerInfo.name ?? 'Unknown',
+                              counterPartyPhone: dealerInfo.phone ?? 'Unknown',
+                              dealLists: dealerInfo.dealLists ?? [],
+                            )
+                          : Container(),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 
+import 'package:ojakgyo/src/services/contract_detail_model.dart';
+
 class ViewContractPage extends StatefulWidget {
   const ViewContractPage({
     Key? key,
+    required this.contractDetailInfo,
   }) : super(key: key);
+
+  final ContractDetailModel contractDetailInfo;
 
   @override
   State<ViewContractPage> createState() => _ViewContractPageState();

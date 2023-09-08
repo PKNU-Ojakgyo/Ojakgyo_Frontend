@@ -6,10 +6,14 @@ class LockerList extends StatefulWidget {
     Key? key,
     required this.lockerID,
     required this.lockerAddress,
+    required this.lockerIdController,
+    required this.lockerAddressController,
   }) : super(key: key);
 
   final int lockerID;
   final String lockerAddress;
+  final TextEditingController lockerIdController;
+  final TextEditingController lockerAddressController;
 
   @override
   State<LockerList> createState() => _AppState();
@@ -64,9 +68,7 @@ class _AppState extends State<LockerList> {
                     ),
                     ChooseBtn(
                       title: '선택',
-                      onPressed: () {
-                        print('선택');
-                      },
+                      onPressed: () {},
                     ),
                   ],
                 ),

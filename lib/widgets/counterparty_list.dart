@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/services/dealer_info_model.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 
 class CounterPartyList extends StatefulWidget {
-  const CounterPartyList({
-    Key? key,
-    required this.counterPartyID,
-    required this.counterPartyName,
-    required this.counterPartyPhone,
-  }) : super(key: key);
+  const CounterPartyList(
+      {Key? key,
+      required this.counterPartyID,
+      required this.counterPartyName,
+      required this.counterPartyPhone,
+      required this.dealLists})
+      : super(key: key);
 
   final String counterPartyID;
   final String counterPartyName;
   final String counterPartyPhone;
+  final List<DealLists> dealLists;
 
   @override
   State<CounterPartyList> createState() => _AppState();
@@ -26,7 +29,7 @@ class _AppState extends State<CounterPartyList> {
     super.initState();
     String copyCounterPartyPhone = widget.counterPartyPhone;
     String replacedPart = '****';
-    modifiedPhone = copyCounterPartyPhone.replaceRange(4, 8, replacedPart);
+    modifiedPhone = copyCounterPartyPhone.replaceRange(3, 7, replacedPart);
     print("phone number : $modifiedPhone");
   }
 
@@ -147,140 +150,70 @@ class _AppState extends State<CounterPartyList> {
                           const SizedBox(
                             height: 15,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
+                          Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: widget.dealLists.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final items = widget.dealLists[index];
+                                  return Column(
                                     children: [
-                                      Text("거래 상태 : "),
-                                      Text(
-                                        "거래 완료",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(18),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text("거래 상태 : "),
+                                                  Text(
+                                                    items.dealStatus ??
+                                                        'Unknown',
+                                                    style: const TextStyle(
+                                                        color:
+                                                            Colors.redAccent),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("거래 일시 : "),
+                                                  Text(items.updateAt ??
+                                                      'Unknown'),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("거래 물품 : "),
+                                                  Text(items.item ?? 'Unknown'),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
+                                      const SizedBox(height: 15),
                                     ],
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("거래 일시 : "),
-                                      Text("2023.08.16 01:29"),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("거래 물품 : "),
-                                      Text("고등어 인형"),
-                                    ],
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            ),
+                            ],
                           ),
                           const SizedBox(
                             height: 15,
                           ),
-                          //////////////////////////////////////////////////////////
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("거래 상태 : "),
-                                      Text(
-                                        "거래 완료",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("거래 일시 : "),
-                                      Text("2023.08.16 01:29"),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("거래 물품 : "),
-                                      Text("고등어 인형"),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("거래 상태 : "),
-                                      Text(
-                                        "거래 완료",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("거래 일시 : "),
-                                      Text("2023.08.16 01:29"),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("거래 물품 : "),
-                                      Text("고등어 인형"),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          /////////////////////////////////////////////////////////
                         ],
                       ),
                     ),

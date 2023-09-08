@@ -6,6 +6,7 @@ import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ojakgyo/src/services/user_info_model.dart';
+import 'package:ojakgyo/src/pages/tran_detail_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -27,10 +28,12 @@ class _AppState extends State<MainPage> {
       print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           userInfo = UserInfoModel.fromJson(responseData);
         });
+        print(userInfo);
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
       }
@@ -193,24 +196,41 @@ class _AppState extends State<MainPage> {
                                 itemCount: dealLists.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final items = dealLists[index];
-                                  return ListCard(
-                                    tranState: dealState[items.dealStatus],
-                                    tranDate: items.createAt,
-                                    tranItem: items.item,
-                                    tranPrice: items.price.toString(),
-                                    seller: items.sellerName,
-                                    buyer: items.buyerName,
-                                    dealId: items.dealId,
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TranDetailPage(
+                                            dealId: items.dealId,
+                                            userInfo: userInfo,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: ListCard(
+                                      tranState: dealState[items.dealStatus],
+                                      tranDate: items.createAt,
+                                      tranItem: items.item,
+                                      tranPrice: items.price.toString(),
+                                      seller: items.sellerName,
+                                      buyer: items.buyerName,
+                                      dealId: items.dealId,
+                                    ),
                                   );
                                 },
                               ),
                             ],
                           )
-                        : const Text(
-                            '등록된 거래 정보가 없습니다.',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                        : const Column(
+                            children: [
+                              Text(
+                                '등록된 거래 정보가 없습니다.',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                   ],
                 ),
