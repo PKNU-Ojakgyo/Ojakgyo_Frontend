@@ -10,7 +10,16 @@ import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:ojakgyo/src/services/dealer_info_model.dart';
 
 class InquiryCounterPartyModal extends StatefulWidget {
-  const InquiryCounterPartyModal({super.key});
+  const InquiryCounterPartyModal({
+    Key? key,
+    required this.buyerNameController,
+    required this.buyerCellPhoneController,
+    required this.callback,
+  }) : super(key: key);
+
+  final TextEditingController buyerNameController;
+  final TextEditingController buyerCellPhoneController;
+  final Function(int) callback;
 
   @override
   State<InquiryCounterPartyModal> createState() =>
@@ -39,8 +48,6 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
           dealerInfo = DealerInfoModel.fromJson(responseData);
           isSearched = true;
         });
-
-        print(responseData);
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
       }
@@ -108,7 +115,7 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                         Material(
                           child: SearchBox(
                             controller: counterPartyController,
-                            hintText: '예시) 홍길동',
+                            hintText: '예시) ojakgyo@naver.com',
                             onPressed: () {
                               searchDealer();
                             },
@@ -127,10 +134,15 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                     children: [
                       isSearched
                           ? CounterPartyList(
+                              dealerID: dealerInfo.dealerId ?? -1,
                               counterPartyID: dealerInfo.email ?? 'Unknown',
                               counterPartyName: dealerInfo.name ?? 'Unknown',
                               counterPartyPhone: dealerInfo.phone ?? 'Unknown',
                               dealLists: dealerInfo.dealLists ?? [],
+                              buyerNameController: widget.buyerNameController,
+                              buyerCellPhoneController:
+                                  widget.buyerCellPhoneController,
+                              callback: widget.callback,
                             )
                           : Container(),
                     ],

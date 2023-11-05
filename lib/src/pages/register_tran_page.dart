@@ -64,8 +64,16 @@ class _AppState extends State<RegisterTranPage> {
 
   final RegisterPost _registerPost = RegisterPost();
   late int dealId;
+  int dealerId = -99999;
+
+  void updateDealerId(int selectedDealerId) {
+    setState(() {
+      dealerId = selectedDealerId;
+    });
+  }
 
   Future<int> submit(BuildContext context) async {
+    print('dealerId : $dealerId');
     try {
       dealId = await _registerPost.registerPost(
         bank: accountBankController ?? 'Unknwon',
@@ -73,8 +81,8 @@ class _AppState extends State<RegisterTranPage> {
         price: int.parse(itemPriceController.text),
         itemName: itemNameController.text,
         condition: itemConditionController.text,
-        dealerId: 1,
-        lockerId: 1,
+        dealerId: dealerId,
+        lockerId: int.parse(lockerIDController.text),
         isSeller: isSeller ?? false,
       );
       return dealId;
@@ -301,9 +309,13 @@ class _AppState extends State<RegisterTranPage> {
                 isDefault: true,
                 controller: buyerCellPhoneController,
               ),
-              const InquiryBtn(
+              InquiryBtn(
                 btnName: '거래 대상자 조회',
-                returnWidget: InquiryCounterPartyModal(),
+                returnWidget: InquiryCounterPartyModal(
+                  buyerNameController: buyerNameController,
+                  buyerCellPhoneController: buyerCellPhoneController,
+                  callback: updateDealerId,
+                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -346,7 +358,7 @@ class _AppState extends State<RegisterTranPage> {
                                             return CustomAlertDialog(
                                               title: const Text('알림'),
                                               content: const Text(
-                                                  '50,000원 이상의 거래이므로\n 간이계약서 작성이 가능합니다. \n간이계약서를 작성하시겠습니까?'),
+                                                  '50,000원 이상의 거래이므로\n간이계약서 작성이 가능합니다. \n간이계약서를 작성하시겠습니까?'),
                                               actions: [
                                                 RegisterBtn(
                                                   btnName: '예',

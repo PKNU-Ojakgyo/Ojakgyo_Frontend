@@ -3,18 +3,26 @@ import 'package:ojakgyo/src/services/dealer_info_model.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 
 class CounterPartyList extends StatefulWidget {
-  const CounterPartyList(
-      {Key? key,
-      required this.counterPartyID,
-      required this.counterPartyName,
-      required this.counterPartyPhone,
-      required this.dealLists})
-      : super(key: key);
+  const CounterPartyList({
+    Key? key,
+    required this.dealerID,
+    required this.counterPartyID,
+    required this.counterPartyName,
+    required this.counterPartyPhone,
+    required this.dealLists,
+    required this.buyerNameController,
+    required this.buyerCellPhoneController,
+    required this.callback,
+  }) : super(key: key);
 
+  final int dealerID;
   final String counterPartyID;
   final String counterPartyName;
   final String counterPartyPhone;
   final List<DealLists> dealLists;
+  final TextEditingController buyerNameController;
+  final TextEditingController buyerCellPhoneController;
+  final Function(int) callback;
 
   @override
   State<CounterPartyList> createState() => _AppState();
@@ -30,7 +38,6 @@ class _AppState extends State<CounterPartyList> {
     String copyCounterPartyPhone = widget.counterPartyPhone;
     String replacedPart = '****';
     modifiedPhone = copyCounterPartyPhone.replaceRange(3, 7, replacedPart);
-    print("phone number : $modifiedPhone");
   }
 
   @override
@@ -228,7 +235,13 @@ class _AppState extends State<CounterPartyList> {
                     ChooseBtn(
                       title: '선택',
                       onPressed: () {
-                        print('click');
+                        widget.callback(widget.dealerID);
+                        widget.buyerNameController.text =
+                            widget.counterPartyName.toString();
+                        widget.buyerCellPhoneController.text =
+                            widget.counterPartyPhone.toString();
+                        // 이제 Navigator.pop를 widget.callback 이후에 호출합니다.
+                        Navigator.pop(context);
                       },
                     ),
                   ],

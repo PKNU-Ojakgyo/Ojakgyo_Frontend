@@ -68,7 +68,15 @@ class _AppState extends State<LockerList> {
                     ),
                     ChooseBtn(
                       title: '선택',
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          widget.lockerIdController.text =
+                              widget.lockerID.toString();
+                          widget.lockerAddressController.text =
+                              widget.lockerAddress;
+                          Navigator.pop(context);
+                        });
+                      },
                     ),
                   ],
                 ),

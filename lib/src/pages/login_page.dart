@@ -110,15 +110,6 @@ class _LoginPageState extends State<LoginPage> {
                 submit(context);
               },
             ),
-            const SizedBox(
-              height: 12,
-            ),
-            const Text(
-              '아이디 찾기 | 비밀번호 찾기',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
           ],
         ),
       ),
