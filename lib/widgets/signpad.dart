@@ -69,12 +69,12 @@ class _SignPadState extends State<SignPad> {
           btnName: '확인',
           onPressed: () async {
             // 이미지 파일로 받아서 Encode
-            final signatureImage =
-                await _signaturePadGlobalKey.currentState!.toImage();
-            final signatureBytes =
-                await signatureImage.toByteData(format: ui.ImageByteFormat.png);
-            final signatureBase64 =
-                base64Encode(signatureBytes!.buffer.asUint8List());
+            // final signatureImage =
+            //     await _signaturePadGlobalKey.currentState!.toImage();
+            // final signatureBytes =
+            //     await signatureImage.toByteData(format: ui.ImageByteFormat.png);
+            // final signatureBase64 =
+            //     base64Encode(signatureBytes!.buffer.asUint8List());
 
             if (!mounted) return;
             Navigator.push(
