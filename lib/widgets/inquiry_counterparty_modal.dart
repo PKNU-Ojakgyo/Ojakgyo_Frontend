@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:ojakgyo/widgets/counterparty_list.dart';
 import 'package:ojakgyo/widgets/search_box.dart';
 
+import 'package:ojakgyo/src/services/auth_token_get.dart';
+
+import 'package:ojakgyo/src/services/dealer_info_model.dart';
+
 class InquiryCounterPartyModal extends StatefulWidget {
-  const InquiryCounterPartyModal({super.key});
+  const InquiryCounterPartyModal({
+    Key? key,
+    required this.buyerNameController,
+    required this.buyerCellPhoneController,
+    required this.callback,
+  }) : super(key: key);
+
+  final TextEditingController buyerNameController;
+  final TextEditingController buyerCellPhoneController;
+  final Function(int) callback;
 
   @override
   State<InquiryCounterPartyModal> createState() =>
@@ -11,7 +27,34 @@ class InquiryCounterPartyModal extends StatefulWidget {
 }
 
 class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
+  late Map<String, dynamic> responseData;
+  DealerInfoModel dealerInfo = DealerInfoModel.fromJson({});
+
   TextEditingController counterPartyController = TextEditingController();
+  bool isSearched = false;
+
+  Future<void> searchDealer() async {
+    String email = counterPartyController.text;
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal/search-dealer?dealerEmail=$email');
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
+
+        setState(() {
+          dealerInfo = DealerInfoModel.fromJson(responseData);
+          isSearched = true;
+        });
+      } else {
+        throw Exception('데이터를 불러오지 못했습니다.');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +115,10 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                         Material(
                           child: SearchBox(
                             controller: counterPartyController,
-                            hintText: '예시) 홍길동',
+                            hintText: '예시) ojakgyo@naver.com',
+                            onPressed: () {
+                              searchDealer();
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -82,18 +128,26 @@ class _InquiryCounterPartyModalState extends State<InquiryCounterPartyModal> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(23),
+                Padding(
+                  padding: const EdgeInsets.all(23),
                   child: Column(
                     children: [
-                      CounterPartyList(
-                        counterPartyID: 'rnjsdbwjd@naver.com',
-                        counterPartyName: '권유정',
-                        counterPartyPhone: '010-9876-5432',
-                      )
+                      isSearched
+                          ? CounterPartyList(
+                              dealerID: dealerInfo.dealerId ?? -1,
+                              counterPartyID: dealerInfo.email ?? 'Unknown',
+                              counterPartyName: dealerInfo.name ?? 'Unknown',
+                              counterPartyPhone: dealerInfo.phone ?? 'Unknown',
+                              dealLists: dealerInfo.dealLists ?? [],
+                              buyerNameController: widget.buyerNameController,
+                              buyerCellPhoneController:
+                                  widget.buyerCellPhoneController,
+                              callback: widget.callback,
+                            )
+                          : Container(),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

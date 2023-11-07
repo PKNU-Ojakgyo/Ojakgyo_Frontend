@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/my_page_btn.dart';
 import 'package:ojakgyo/widgets/line.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
+import 'package:ojakgyo/src/services/user_info_model.dart';
 
 class MyPage extends StatefulWidget {
-  const MyPage({Key? key, required this.user}) : super(key: key);
-
-  final User user;
+  const MyPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyPage> createState() => _AppState();
 }
 
 class _AppState extends State<MyPage> {
+  UserInfoModel userInfo = UserInfoModel();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class _AppState extends State<MyPage> {
                 child: Row(
                   children: [
                     Image.asset(
-                      widget.user.profile,
+                      'assets/images/profile1_img.png',
                       height: 90,
                       width: 90,
                     ),
@@ -44,7 +46,7 @@ class _AppState extends State<MyPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.user.name,
+                          userInfo.user?.name ?? 'Unknown',
                           style: const TextStyle(
                             color: Color.fromARGB(221, 21, 21, 21),
                             fontSize: 23,
@@ -55,7 +57,7 @@ class _AppState extends State<MyPage> {
                           height: 3,
                         ),
                         Text(
-                          widget.user.phone,
+                          userInfo.user?.phone ?? 'Unknown',
                           style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
                             fontSize: 18,
@@ -82,17 +84,21 @@ class _AppState extends State<MyPage> {
               MyPageBtn(
                 btnType: btnType,
               ),
-            const SizedBox(
-              height: 160,
-            ),
-            const Line(),
-            const SizedBox(
-              height: 24,
-            ),
-            Image.asset(
-              'assets/images/logo.png',
-              height: 70,
-              width: 150,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Line(),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: 70,
+                    width: 150,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

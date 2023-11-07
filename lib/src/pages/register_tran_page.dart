@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:ojakgyo/src/pages/write_contract_page.dart';
+import 'package:ojakgyo/src/pages/main_page.dart';
+import 'package:ojakgyo/src/services/register_post.dart';
+
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
@@ -7,19 +11,19 @@ import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/inquiry_btn.dart';
 import 'package:ojakgyo/widgets/text_input.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
 import 'package:ojakgyo/widgets/inquiry_locker_modal.dart';
 import 'package:ojakgyo/widgets/inquiry_counterparty_modal.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
-import 'package:ojakgyo/src/pages/main_page.dart';
+
+import 'package:ojakgyo/src/services/user_info_model.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({
     Key? key,
-    required this.user,
+    required this.userInfo,
   }) : super(key: key);
 
-  final User user;
+  final UserInfoModel userInfo;
 
   @override
   State<RegisterTranPage> createState() => _AppState();
@@ -48,8 +52,8 @@ class _AppState extends State<RegisterTranPage> {
   // 각 textField에서 입력 받은 값을 저장할 변수
   late TextEditingController lockerIDController; // default
   late TextEditingController lockerAddressController; // default
-  late TextEditingController nameController; // default : userInfo
-  late TextEditingController cellPhoneController; // default : userInfo
+  late TextEditingController nameController; // default : register
+  late TextEditingController cellPhoneController; // default : register
   late TextEditingController accountController;
   late TextEditingController priceController;
   late TextEditingController itemPriceController;
@@ -58,20 +62,33 @@ class _AppState extends State<RegisterTranPage> {
   late TextEditingController buyerNameController; // default
   late TextEditingController buyerCellPhoneController; // default
 
-  void submitTranInfo() {
-    print("locker_id : ${lockerIDController.text}"); // default
-    print("locker_address : ${lockerAddressController.text}"); // default
-    print("name : ${nameController.text}"); // default
-    print("cellphone : ${cellPhoneController.text}"); // default
-    print("isSeller : $isSeller");
-    print("isbuyer : $isBuyer");
-    print("account : ${accountController.text}"); // 숫자로 입력받기
-    print("account_bank : $accountBankController");
-    print("price : ${itemPriceController.text}"); // 숫자로 입력받기
-    print("item : ${itemNameController.text}");
-    print("condition : ${itemConditionController.text}");
-    print("buyer_name : ${buyerNameController.text}"); // default
-    print("buyer_cellphone : ${buyerCellPhoneController.text}"); // default
+  final RegisterPost _registerPost = RegisterPost();
+  late int dealId;
+  int dealerId = -99999;
+
+  void updateDealerId(int selectedDealerId) {
+    setState(() {
+      dealerId = selectedDealerId;
+    });
+  }
+
+  Future<int> submit(BuildContext context) async {
+    print('dealerId : $dealerId');
+    try {
+      dealId = await _registerPost.registerPost(
+        bank: accountBankController ?? 'Unknwon',
+        account: accountController.text,
+        price: int.parse(itemPriceController.text),
+        itemName: itemNameController.text,
+        condition: itemConditionController.text,
+        dealerId: dealerId,
+        lockerId: int.parse(lockerIDController.text),
+        isSeller: isSeller ?? false,
+      );
+      return dealId;
+    } catch (e) {
+      return -1;
+    }
   }
 
   bool isNullTextField(
@@ -112,16 +129,17 @@ class _AppState extends State<RegisterTranPage> {
   @override
   void initState() {
     super.initState();
-    lockerIDController = TextEditingController(text: 'test');
-    lockerAddressController = TextEditingController(text: 'test');
-    nameController = TextEditingController(text: widget.user.name);
-    cellPhoneController = TextEditingController(text: widget.user.phone);
-    accountController = TextEditingController(text: 'test');
-    itemPriceController = TextEditingController(text: 'test');
-    itemNameController = TextEditingController(text: 'test');
-    itemConditionController = TextEditingController(text: 'test');
-    buyerNameController = TextEditingController(text: 'test');
-    buyerCellPhoneController = TextEditingController(text: 'test');
+    lockerIDController = TextEditingController();
+    lockerAddressController = TextEditingController();
+    nameController = TextEditingController(text: widget.userInfo.user?.name);
+    cellPhoneController =
+        TextEditingController(text: widget.userInfo.user?.phone);
+    accountController = TextEditingController();
+    itemPriceController = TextEditingController();
+    itemNameController = TextEditingController();
+    itemConditionController = TextEditingController();
+    buyerNameController = TextEditingController();
+    buyerCellPhoneController = TextEditingController();
   }
 
   @override
@@ -149,9 +167,12 @@ class _AppState extends State<RegisterTranPage> {
                 isDefault: true,
                 controller: lockerAddressController,
               ),
-              const InquiryBtn(
+              InquiryBtn(
                 btnName: '락커 조회하기',
-                returnWidget: InquiryLockerModal(),
+                returnWidget: InquiryLockerModal(
+                  lockerIdController: lockerIDController,
+                  lockerAddressController: lockerAddressController,
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -288,9 +309,13 @@ class _AppState extends State<RegisterTranPage> {
                 isDefault: true,
                 controller: buyerCellPhoneController,
               ),
-              const InquiryBtn(
+              InquiryBtn(
                 btnName: '거래 대상자 조회',
-                returnWidget: InquiryCounterPartyModal(),
+                returnWidget: InquiryCounterPartyModal(
+                  buyerNameController: buyerNameController,
+                  buyerCellPhoneController: buyerCellPhoneController,
+                  callback: updateDealerId,
+                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -322,48 +347,51 @@ class _AppState extends State<RegisterTranPage> {
                               actions: [
                                 RegisterBtn(
                                   btnName: '확인',
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomAlertDialog(
-                                          title: const Text('알림'),
-                                          content: const Text(
-                                              '50,000원 이상의 거래이므로\n 간이계약서 작성이 가능합니다. \n간이계약서를 작성하시겠습니까?'),
-                                          actions: [
-                                            RegisterBtn(
-                                              btnName: '예',
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        WriteContractPage(
-                                                            user: widget.user),
-                                                  ),
-                                                );
-                                              },
-                                              isModal: true,
-                                            ),
-                                            RegisterBtn(
-                                              btnName: '아니요',
-                                              onPressed: () {
-                                                submitTranInfo();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MainPage(
-                                                            user: widget.user),
-                                                  ),
-                                                );
-                                              },
-                                              isModal: true,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                  onPressed: () async {
+                                    dealId = await submit(context);
+                                    if (int.parse(itemPriceController.text) >=
+                                        50000) {
+                                      if (!mounted) return;
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CustomAlertDialog(
+                                              title: const Text('알림'),
+                                              content: const Text(
+                                                  '50,000원 이상의 거래이므로\n간이계약서 작성이 가능합니다. \n간이계약서를 작성하시겠습니까?'),
+                                              actions: [
+                                                RegisterBtn(
+                                                  btnName: '예',
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            WriteContractPage(
+                                                          dealId: dealId,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  isModal: true,
+                                                ),
+                                                RegisterBtn(
+                                                  btnName: '아니요',
+                                                  onPressed: () {
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const MainPage(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  isModal: true,
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    }
                                   },
                                   isModal: true,
                                 ),

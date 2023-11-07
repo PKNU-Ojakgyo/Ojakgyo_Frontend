@@ -5,10 +5,12 @@ class SearchBox extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.hintText,
+    required this.onPressed,
   }) : super(key: key);
 
   final TextEditingController controller;
   final String hintText;
+  final VoidCallback onPressed;
 
   @override
   State<SearchBox> createState() => _SearchBoxState();
@@ -41,9 +43,7 @@ class _SearchBoxState extends State<SearchBox> {
             ),
           ),
           IconButton(
-              onPressed: () {
-                print("click");
-              },
+              onPressed: widget.onPressed,
               icon: const Icon(
                 Icons.search,
                 size: 30,

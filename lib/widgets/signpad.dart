@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
-// import 'dart:convert';
-// import 'dart:ui' as ui;
-import 'package:ojakgyo/src/services/user_data.dart';
+import 'dart:convert';
+import 'dart:ui' as ui;
 import 'package:ojakgyo/src/pages/main_page.dart';
 
 class SignPad extends StatefulWidget {
-  const SignPad({Key? key, required this.user}) : super(key: key);
-
-  final User user;
+  const SignPad({Key? key}) : super(key: key);
 
   @override
   State<SignPad> createState() => _SignPadState();
@@ -79,10 +76,11 @@ class _SignPadState extends State<SignPad> {
             // final signatureBase64 =
             //     base64Encode(signatureBytes!.buffer.asUint8List());
 
+            if (!mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MainPage(user: widget.user),
+                builder: (context) => const MainPage(),
               ),
             );
 

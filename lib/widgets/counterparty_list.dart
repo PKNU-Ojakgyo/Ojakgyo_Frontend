@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/services/dealer_info_model.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 
 class CounterPartyList extends StatefulWidget {
   const CounterPartyList({
     Key? key,
+    required this.dealerID,
     required this.counterPartyID,
     required this.counterPartyName,
     required this.counterPartyPhone,
+    required this.dealLists,
+    required this.buyerNameController,
+    required this.buyerCellPhoneController,
+    required this.callback,
   }) : super(key: key);
 
+  final int dealerID;
   final String counterPartyID;
   final String counterPartyName;
   final String counterPartyPhone;
+  final List<DealLists> dealLists;
+  final TextEditingController buyerNameController;
+  final TextEditingController buyerCellPhoneController;
+  final Function(int) callback;
 
   @override
   State<CounterPartyList> createState() => _AppState();
@@ -26,8 +37,7 @@ class _AppState extends State<CounterPartyList> {
     super.initState();
     String copyCounterPartyPhone = widget.counterPartyPhone;
     String replacedPart = '****';
-    modifiedPhone = copyCounterPartyPhone.replaceRange(4, 8, replacedPart);
-    print("phone number : $modifiedPhone");
+    modifiedPhone = copyCounterPartyPhone.replaceRange(3, 7, replacedPart);
   }
 
   @override
@@ -115,7 +125,7 @@ class _AppState extends State<CounterPartyList> {
                         Row(
                           children: [
                             const Icon(
-                              Icons.phone,
+                              Icons.phone_android,
                               color: Color.fromARGB(221, 53, 53, 53),
                               size: 18,
                             ),
@@ -147,140 +157,70 @@ class _AppState extends State<CounterPartyList> {
                           const SizedBox(
                             height: 15,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: const [
-                                      Text("거래 상태 : "),
-                                      Text(
-                                        "거래 완료",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
+                          Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: widget.dealLists.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final items = widget.dealLists[index];
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(18),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text("거래 상태 : "),
+                                                  Text(
+                                                    items.dealStatus ??
+                                                        'Unknown',
+                                                    style: const TextStyle(
+                                                        color:
+                                                            Colors.redAccent),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("거래 일시 : "),
+                                                  Text(items.updateAt ??
+                                                      'Unknown'),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("거래 물품 : "),
+                                                  Text(items.item ?? 'Unknown'),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
+                                      const SizedBox(height: 15),
                                     ],
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Text("거래 일시 : "),
-                                      Text("2023.08.16 01:29"),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Text("거래 물품 : "),
-                                      Text("고등어 인형"),
-                                    ],
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            ),
+                            ],
                           ),
                           const SizedBox(
                             height: 15,
                           ),
-                          //////////////////////////////////////////////////////////
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: const [
-                                      Text("거래 상태 : "),
-                                      Text(
-                                        "거래 완료",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Text("거래 일시 : "),
-                                      Text("2023.08.16 01:29"),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Text("거래 물품 : "),
-                                      Text("고등어 인형"),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: const [
-                                      Text("거래 상태 : "),
-                                      Text(
-                                        "거래 완료",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Text("거래 일시 : "),
-                                      Text("2023.08.16 01:29"),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      Text("거래 물품 : "),
-                                      Text("고등어 인형"),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          /////////////////////////////////////////////////////////
                         ],
                       ),
                     ),
@@ -295,7 +235,13 @@ class _AppState extends State<CounterPartyList> {
                     ChooseBtn(
                       title: '선택',
                       onPressed: () {
-                        print('click');
+                        widget.callback(widget.dealerID);
+                        widget.buyerNameController.text =
+                            widget.counterPartyName.toString();
+                        widget.buyerCellPhoneController.text =
+                            widget.counterPartyPhone.toString();
+                        // 이제 Navigator.pop를 widget.callback 이후에 호출합니다.
+                        Navigator.pop(context);
                       },
                     ),
                   ],

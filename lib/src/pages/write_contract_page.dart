@@ -7,12 +7,14 @@ import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/signpad.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/modify_contract.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
 
 class WriteContractPage extends StatefulWidget {
-  const WriteContractPage({Key? key, required this.user}) : super(key: key);
+  const WriteContractPage({
+    Key? key,
+    required this.dealId,
+  }) : super(key: key);
 
-  final User user;
+  final int dealId;
 
   @override
   State<WriteContractPage> createState() => _WriteContractPageState();
@@ -191,9 +193,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return SignPad(
-                                          user: widget.user,
-                                        );
+                                        return const SignPad();
                                       },
                                     );
                                   },

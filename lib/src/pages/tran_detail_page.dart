@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:ojakgyo/src/pages/view_contract_page.dart';
+import 'package:ojakgyo/src/services/user_info_model.dart';
+
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
@@ -7,15 +12,20 @@ import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/choose_btn.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
-import 'package:ojakgyo/src/services/user_data.dart';
+
+import 'package:ojakgyo/src/services/auth_token_get.dart';
+import 'package:ojakgyo/src/services/tran_detail_model.dart';
+import 'package:ojakgyo/src/services/contract_detail_model.dart';
 
 class TranDetailPage extends StatefulWidget {
   const TranDetailPage({
     Key? key,
-    required this.user,
+    required this.dealId,
+    required this.userInfo,
   }) : super(key: key);
 
-  final User user;
+  final int? dealId;
+  final UserInfoModel userInfo;
 
   @override
   State<TranDetailPage> createState() => _TranDetailPageState();
@@ -23,9 +33,153 @@ class TranDetailPage extends StatefulWidget {
 
 class _TranDetailPageState extends State<TranDetailPage> {
   bool isChecked = false;
+  Map<String, dynamic> dealState = {
+    'BEFORE': '거래 전',
+    'DEALING': '거래 중',
+    'COMPLETED': '거래 완료',
+    'CANCELED': '거래 취소',
+  };
+
+  late Map<String, dynamic> responseData;
+  TranDetailModel tranDetail = TranDetailModel.fromJson({});
+  ContractDetailModel contractDetail = ContractDetailModel.fromJson({});
+
+  Future<void> sendToken() async {
+    int? dealID = widget.dealId;
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response =
+          await authToken.authTokenCallBack('deal-details?dealId=$dealID');
+      print(jsonDecode(response.body));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        setState(() {
+          tranDetail = TranDetailModel.fromJson(responseData);
+        });
+      } else {
+        throw Exception('데이터를 불러오지 못했습니다.');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> inquiryContract() async {
+    int? contractID = tranDetail.contactId;
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('/contract/details?contractId=$contractID');
+      print(jsonDecode(response.body));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        setState(() {
+          contractDetail = ContractDetailModel.fromJson(responseData);
+        });
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewContractPage(
+              contractDetailInfo: contractDetail,
+            ),
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomAlertDialog(
+              title: const Text('알림'),
+              content: const Text('조회할 간이계약서가 없습니다.'),
+              actions: [
+                RegisterBtn(
+                  btnName: '확인',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  isModal: true,
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> buyerChecked() async {
+    int? dealID = widget.dealId;
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
+      print(jsonDecode(response.body));
+
+      if (response.statusCode == 200) {
+      } else {
+        setState(
+          () {
+            isChecked = false;
+          },
+        );
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> sellerChecked() async {
+    int? dealID = widget.dealId;
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken.authTokenCallBack(
+          'deal-details/seller-deposit-check?dealID=$dealID');
+
+      if (response.statusCode == 200) {
+        print('sellerChecked : ${response.body}');
+        setState(
+          () {
+            isChecked = true;
+            tranDetail.lockerPassword = response.body;
+          },
+        );
+      } else {
+        print('실패다 이자식아');
+        setState(
+          () {
+            isChecked = false;
+          },
+        );
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  bool identifySeller() {
+    print(tranDetail.sellerPhone);
+    print(widget.userInfo.user?.phone);
+    print(tranDetail.sellerPhone == widget.userInfo.user?.phone);
+    return tranDetail.sellerPhone == widget.userInfo.user?.phone;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sendToken();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('userInfo : ${widget.userInfo.user?.phone}');
     return Scaffold(
       appBar: const BackNavBar(),
       backgroundColor: const Color(0xFF23225C),
@@ -46,64 +200,93 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         ChooseBtn(
                           title: '간이계약서 조회하기',
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewContractPage(user: widget.user),
-                              ),
-                            );
+                            inquiryContract();
                           },
                           isNotChooseBtn: true,
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 3,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '서명하지 않은 간이계약서가 존재합니다.\n서명 후 거래 등록이 완료됩니다.',
+                          style: TextStyle(
+                            color: tranDetail.dealStatus != 'BEFORE'
+                                ? Colors.white
+                                : Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
                     const SubTitle(subTitle: '입금 현황'),
                     Row(
                       children: [
-                        const Text(
-                          '판매자',
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
+                        identifySeller()
+                            ? const Text(
+                                '판매자',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            : const Text(
+                                '구매자',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
                         SizedBox(
                           width: 30,
                           height: 24,
                           child: Checkbox(
                             value: isChecked,
                             onChanged: (value) {
-                              setState(
-                                () {
-                                  isChecked = !isChecked;
-                                },
-                              );
+                              if (isChecked == false) {
+                                if (identifySeller()) {
+                                  print('나 판매자');
+                                  sellerChecked();
+                                } else {
+                                  print('나 구매자');
+                                  buyerChecked();
+                                }
+                              }
                             },
                           ),
                         ),
-                        const Text(
-                          "입금 확인",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
+                        identifySeller()
+                            ? const Text(
+                                "입금 확인",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            : const Text(
+                                "입금 완료",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
                       ],
                     ),
                     Row(
                       children: [
-                        Text(
-                          '구매자의 입금을 확인 후 체크 해주세요.',
-                          style: TextStyle(
-                            color: isChecked ? Colors.white : Colors.red,
-                          ),
-                        ),
+                        identifySeller()
+                            ? Text(
+                                '구매자의 입금을 확인 후 체크 해주세요.',
+                                style: TextStyle(
+                                  color: isChecked ? Colors.white : Colors.red,
+                                ),
+                              )
+                            : Text(
+                                '판매자에게 입금 완료 후 체크 해주세요.',
+                                style: TextStyle(
+                                  color: isChecked ? Colors.white : Colors.red,
+                                ),
+                              )
                       ],
-                    ),
-                    const SizedBox(
-                      height: 10,
                     ),
                     Transform.translate(
                       offset: const Offset(0, 15),
@@ -139,8 +322,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '락커 정보'),
                         ],
                       ),
-                      const Text('락커 아이디 : 1'),
-                      const Text('락커 주소 : 부산광역시시 용소로 45'),
+                      Text('락커 아이디 : ${tranDetail.lockerId}'),
+                      Text('락커 주소 : ${tranDetail.lockerAddress}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -159,8 +342,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '판매자 정보'),
                         ],
                       ),
-                      const Text('판매자 이름 : 손후추'),
-                      const Text('판매자 전화번호 : 010-1234-5678'),
+                      Text('판매자 이름 : ${tranDetail.sellerName}'),
+                      Text('판매자 전화번호 : ${tranDetail.sellerPhone}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -179,8 +362,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '구매자 정보'),
                         ],
                       ),
-                      const Text('구매자 이름 : 이오정'),
-                      const Text('구매자 전화번호 : 010-8765-4321'),
+                      Text('구매자 이름 : ${tranDetail.buyerName}'),
+                      Text('구매자 전화번호 : ${tranDetail.buyerPhone}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -199,11 +382,11 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '거래 정보'),
                         ],
                       ),
-                      const Text('거래 은행 : 카카오뱅크'),
-                      const Text('거래 계좌 : 123456789'),
-                      const Text('거래 금액 : 10,000원'),
-                      const Text('거래 물품 : 고등어 인형'),
-                      const Text('물품 상태 : 아주 좋음 굿굿'),
+                      Text('거래 은행 : ${tranDetail.bank}'),
+                      Text('거래 계좌 : ${tranDetail.account}'),
+                      Text('거래 금액 : ${tranDetail.price}원'),
+                      Text('거래 물품 : ${tranDetail.itemName}'),
+                      Text('물품 상태 : ${tranDetail.condition}'),
                       const SizedBox(
                         height: 10,
                       ),
@@ -222,12 +405,19 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '입금 현황'),
                         ],
                       ),
-                      const Text(
-                        '입금전',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
+                      tranDetail.depositStatus == false
+                          ? const Text(
+                              '입금 전',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            )
+                          : const Text(
+                              '입금 완료',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -247,21 +437,21 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         ],
                       ),
                       Row(
-                        children: const [
-                          Text('2023.08.17 01:34'),
-                          SizedBox(
+                        children: [
+                          Text(tranDetail.createLockerPwdAt ?? 'Unknown'),
+                          const SizedBox(
                             width: 10,
                           ),
                           Text(
-                            '1234',
-                            style: TextStyle(
+                            tranDetail.lockerPassword ?? 'Unknown',
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           )
                         ],
                       ),
                       const Text(
-                        '입금전',
+                        '입금 확인 후 비밀번호가 공개됩니다.',
                         style: TextStyle(
                           color: Colors.red,
                         ),
@@ -284,9 +474,9 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '거래 상태'),
                         ],
                       ),
-                      const Text(
-                        '거래 중',
-                        style: TextStyle(
+                      Text(
+                        dealState[tranDetail.dealStatus] ?? 'Unknown',
+                        style: const TextStyle(
                           color: Colors.red,
                         ),
                       ),
@@ -297,28 +487,29 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           RegisterBtn(
-                              btnName: '거래파기',
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomAlertDialog(
-                                      title: const Text('경고'),
-                                      content: const Text('거래를 파기하시겠습니까?'),
-                                      actions: [
-                                        RegisterBtn(
-                                          btnName: '확인',
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          isModal: true,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              isModal: false)
+                            btnName: '거래파기',
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomAlertDialog(
+                                    title: const Text('경고'),
+                                    content: const Text('거래를 파기하시겠습니까?'),
+                                    actions: [
+                                      RegisterBtn(
+                                        btnName: '확인',
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        isModal: true,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            isModal: false,
+                          ),
                         ],
                       ),
                     ],
