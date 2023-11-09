@@ -12,8 +12,8 @@ class RegisterPost {
     required int price,
     required String itemName,
     required String condition,
-    required int dealerId,
-    required int lockerId,
+    required String dealerId,
+    required String lockerId,
     required bool isSeller,
   }) async {
     AuthTokenGet authToken = AuthTokenGet();
