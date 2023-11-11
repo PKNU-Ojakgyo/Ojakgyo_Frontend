@@ -32,6 +32,13 @@ class _AppState extends State<CounterPartyList> {
   bool isToggled = true;
   late String modifiedPhone = '';
 
+  Map<String, dynamic> dealState = {
+      'BEFORE': '거래 전',
+      'DEALING': '거래 중',
+      'COMPLETED': '거래 완료',
+      'CANCELED': '거래 취소',
+    };
+
   @override
   void initState() {
     super.initState();
@@ -180,7 +187,7 @@ class _AppState extends State<CounterPartyList> {
                                                 children: [
                                                   const Text("거래 상태 : "),
                                                   Text(
-                                                    items.dealStatus ??
+                                                    dealState[items.dealStatus] ??
                                                         'Unknown',
                                                     style: const TextStyle(
                                                         color:
