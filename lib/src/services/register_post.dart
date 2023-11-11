@@ -18,6 +18,7 @@ class RegisterPost {
   }) async {
     AuthTokenGet authToken = AuthTokenGet();
 
+    print("이제 서버로 보낸다..");
     final response = await http.post(
       Uri.parse('$baseURL/deal'),
       headers: {
@@ -36,12 +37,13 @@ class RegisterPost {
     );
 
     if (response.statusCode == 200) {
+      print("서버로 갔다");
       final Map<String, dynamic> responseData = json.decode(response.body);
       final int dealId = responseData['dealId'];
 
       return dealId;
     } else {
-      throw Exception('거래를 등록에 실패했습니다.');
+      return -999;
     }
   }
 }
