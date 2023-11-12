@@ -73,7 +73,6 @@ class _AppState extends State<RegisterTranPage> {
   }
 
   Future<int> submit(BuildContext context) async {
-    print('submit 함수 들어왔다');
     try {
       print('try 들어왔다.');
       int dealId = await _registerPost.registerPost(
