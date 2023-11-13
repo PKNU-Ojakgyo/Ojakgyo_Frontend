@@ -88,7 +88,9 @@ class _AppState extends State<MainPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyPage()),
+                                builder: (context) => MyPage(
+                                  userInfo: userInfo,
+                                )),
                           )
                         },
                         child: Container(
