@@ -47,14 +47,15 @@ class _TranDetailPageState extends State<TranDetailPage> {
   Future<void> sendToken() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
+    print(dealID);
     try {
       http.Response response =
           await authToken.authTokenCallBack('deal-details?dealId=$dealID');
-      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
             jsonDecode(utf8.decode(response.bodyBytes));
+            print(responseData);
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
         });

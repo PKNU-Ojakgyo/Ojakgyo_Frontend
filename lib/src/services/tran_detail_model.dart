@@ -11,7 +11,7 @@ class TranDetailModel {
   int? price;
   String? itemName;
   String? condition;
-  bool? depositStatus;
+  String? depositStatus;
   String? lockerPassword;
   String? createLockerPwdAt;
   String? dealStatus;
