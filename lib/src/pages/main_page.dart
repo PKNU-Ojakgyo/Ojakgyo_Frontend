@@ -88,7 +88,9 @@ class _AppState extends State<MainPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyPage()),
+                                builder: (context) => MyPage(
+                                  userInfo: userInfo,
+                                )),
                           )
                         },
                         child: Container(
@@ -185,9 +187,6 @@ class _AppState extends State<MainPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     dealLists != null && dealLists.isNotEmpty
                         ? Column(
                             children: [
@@ -224,6 +223,9 @@ class _AppState extends State<MainPage> {
                           )
                         : const Column(
                             children: [
+                              SizedBox(
+                                height: 20,
+                              ),
                               Text(
                                 '등록된 거래 정보가 없습니다.',
                                 style: TextStyle(

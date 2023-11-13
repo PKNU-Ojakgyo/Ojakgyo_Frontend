@@ -209,15 +209,13 @@ class _TranDetailPageState extends State<TranDetailPage> {
                     const SizedBox(
                       height: 3,
                     ),
-                    Row(
+                    tranDetail.contactId == -1 ? Container() : Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
+                        tranDetail.dealStatus != 'BEFORE' ? Container() : const Text(
                           '서명하지 않은 간이계약서가 존재합니다.\n서명 후 거래 등록이 완료됩니다.',
                           style: TextStyle(
-                            color: tranDetail.dealStatus != 'BEFORE'
-                                ? Colors.white
-                                : Colors.red,
+                            color: Colors.red,
                           ),
                         ),
                       ],

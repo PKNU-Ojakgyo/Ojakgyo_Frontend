@@ -7,14 +7,16 @@ import 'package:ojakgyo/src/services/user_info_model.dart';
 class MyPage extends StatefulWidget {
   const MyPage({
     Key? key,
+    required this.userInfo,
   }) : super(key: key);
+
+  final UserInfoModel userInfo;
 
   @override
   State<MyPage> createState() => _AppState();
 }
 
 class _AppState extends State<MyPage> {
-  UserInfoModel userInfo = UserInfoModel();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class _AppState extends State<MyPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.user?.name ?? 'Unknown',
+                          widget.userInfo.user?.name ?? "Unknown",
                           style: const TextStyle(
                             color: Color.fromARGB(221, 21, 21, 21),
                             fontSize: 23,
@@ -57,7 +59,7 @@ class _AppState extends State<MyPage> {
                           height: 3,
                         ),
                         Text(
-                          userInfo.user?.phone ?? 'Unknown',
+                          widget.userInfo.user?.phone ?? 'Unknown',
                           style: const TextStyle(
                             color: Color.fromARGB(221, 53, 53, 53),
                             fontSize: 18,
