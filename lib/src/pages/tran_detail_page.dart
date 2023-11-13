@@ -153,7 +153,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
           },
         );
       } else {
-        print('실패다 이자식아');
         setState(
           () {
             isChecked = false;
@@ -490,7 +489,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           RegisterBtn(
                             btnName: '거래파기',
                             onPressed: () {
-                              showDialog(
+                              if (tranDetail.dealStatus == "BEFORE") {
+                                showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return CustomAlertDialog(
@@ -498,7 +498,14 @@ class _TranDetailPageState extends State<TranDetailPage> {
                                     content: const Text('거래를 파기하시겠습니까?'),
                                     actions: [
                                       RegisterBtn(
-                                        btnName: '확인',
+                                        btnName: '파기',
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        isModal: true,
+                                      ),
+                                      RegisterBtn(
+                                        btnName: '취소',
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
@@ -508,6 +515,27 @@ class _TranDetailPageState extends State<TranDetailPage> {
                                   );
                                 },
                               );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      title: const Text('알림'),
+                                      content: const Text('진행 중이거나 완료된 거래는 파기할 수 없습니다.'),
+                                      actions: [
+                                        RegisterBtn(
+                                          btnName: '확인',
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          isModal: true,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                              
                             },
                             isModal: false,
                           ),
