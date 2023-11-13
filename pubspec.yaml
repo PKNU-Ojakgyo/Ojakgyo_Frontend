@@ -47,7 +47,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  flutter_native_splash: ^2.3.2
+  flutter_native_splash: ^2.3.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -63,6 +63,8 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/profile1_img.png
+    - assets/images/splash_screen_img.png
+    - assets/images/splash_screen_img_android12.png
   #  - lib/src/testdata/main.json
 
   # assets:
