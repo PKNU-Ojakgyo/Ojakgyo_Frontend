@@ -56,7 +56,18 @@ class _TranDetailPageState extends State<TranDetailPage> {
             jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
-          print(responseData);
+        });
+        print(tranDetail.sellerPhone == widget.userInfo.user?.phone);
+        setState(() {
+          if (tranDetail.sellerPhone == widget.userInfo.user?.phone) {
+            if (tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK") {
+              isChecked = true;
+            }
+          } else {
+            if (tranDetail.depositStatus != "BUYER_DEPOSIT_BEFORE") {
+              isChecked = true;
+            }
+          }
         });
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
@@ -118,21 +129,16 @@ class _TranDetailPageState extends State<TranDetailPage> {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
 
-    print(
-        'tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE" : ${tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE"}');
-
     if (tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE") {
       try {
         http.Response response = await authToken.authTokenCallBack(
             'deal-details/buyer-deposit-complete?dealId=$dealID');
 
         if (response.statusCode == 200) {
-        } else {
-          setState(
-            () {
-              isChecked = true;
-            },
-          );
+          setState(() {
+            isChecked = true;
+            tranDetail.lockerPassword = response.body;
+          });
         }
       } catch (e) {
         throw Exception("ERROR : $e");
@@ -150,18 +156,9 @@ class _TranDetailPageState extends State<TranDetailPage> {
             'deal-details/seller-deposit-check?dealId=$dealID');
 
         if (response.statusCode == 200) {
-          setState(
-            () {
-              isChecked = true;
-              tranDetail.lockerPassword = response.body;
-            },
-          );
-        } else {
-          setState(
-            () {
-              isChecked = false;
-            },
-          );
+          setState(() {
+            isChecked = true;
+          });
         }
       } catch (e) {
         throw Exception(e);
@@ -173,29 +170,23 @@ class _TranDetailPageState extends State<TranDetailPage> {
     return tranDetail.sellerPhone == widget.userInfo.user?.phone;
   }
 
-  void isCheckedStatus() {
-    if (identifySeller()) {
-      if (tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK") {
-        print('나 판매자인디 입금 현황 내가 확인했다.');
-        setState(() {
-          isChecked = true;
-        });
-      } else {
-        setState(() {
-          print('나 판매자인디 입금 현황 내가 확인했다.');
-          isChecked = false;
-        });
+  Future<void> completeDeal() async {
+    int? dealID = widget.dealId;
+    AuthTokenGet authToken = AuthTokenGet();
+
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
+
+      if (response.statusCode == 200) {
+        setState(
+          () {
+            tranDetail.dealStatus = response.body;
+          },
+        );
       }
-    } else {
-      if (tranDetail.depositStatus != "BUYER_DEPOSIT_BEFORE") {
-        setState(() {
-          isChecked = true;
-        });
-      } else {
-        setState(() {
-          isChecked = false;
-        });
-      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
@@ -207,7 +198,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    isCheckedStatus();
     return Scaffold(
       appBar: const BackNavBar(),
       backgroundColor: const Color(0xFF23225C),
@@ -274,12 +264,10 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           child: Checkbox(
                             value: isChecked,
                             onChanged: (value) {
-                              if (isChecked == false) {
-                                if (identifySeller()) {
-                                  sellerChecked();
-                                } else {
-                                  buyerChecked();
-                                }
+                              if (identifySeller()) {
+                                sellerChecked();
+                              } else {
+                                buyerChecked();
                               }
                             },
                           ),
@@ -632,12 +620,46 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '거래 상태'),
                         ],
                       ),
-                      Text(
-                        dealState[tranDetail.dealStatus] ?? 'Unknown',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
+                      tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK" &&
+                              tranDetail.dealStatus == "DEALING" &&
+                              !identifySeller()
+                          ? ChooseBtn(
+                              title: '거래 완료하기',
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      title: const Text('알림'),
+                                      content: const Text('거래를 완료하시겠습니까?'),
+                                      actions: [
+                                        RegisterBtn(
+                                          btnName: '취소',
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          isModal: true,
+                                        ),
+                                        RegisterBtn(
+                                          btnName: '완료',
+                                          onPressed: () {
+                                            completeDeal();
+                                          },
+                                          isModal: true,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              isNotChooseBtn: true,
+                            )
+                          : Text(
+                              dealState[tranDetail.dealStatus] ?? 'Unknown',
+                              style: const TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
                       const SizedBox(
                         height: 5,
                       ),
