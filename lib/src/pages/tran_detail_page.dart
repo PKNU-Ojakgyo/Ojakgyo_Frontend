@@ -47,7 +47,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
   Future<void> sendToken() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
-    print(dealID);
     try {
       http.Response response =
           await authToken.authTokenCallBack('deal-details?dealId=$dealID');
@@ -55,7 +54,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
             jsonDecode(utf8.decode(response.bodyBytes));
-            print(responseData);
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
         });
@@ -73,7 +71,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
     try {
       http.Response response = await authToken
           .authTokenCallBack('/contract/details?contractId=$contractID');
-      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
@@ -119,10 +116,11 @@ class _TranDetailPageState extends State<TranDetailPage> {
   Future<void> buyerChecked() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
-    try {
+
+    if (tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE") {
+      try {
       http.Response response = await authToken
           .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
-      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
       } else {
@@ -135,17 +133,19 @@ class _TranDetailPageState extends State<TranDetailPage> {
     } catch (e) {
       throw Exception(e);
     }
+    } 
   }
 
   Future<void> sellerChecked() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
-    try {
+  
+    if (tranDetail.depositStatus == "BUYER_DEPOSIT_COMPLETE") {
+      try {
       http.Response response = await authToken.authTokenCallBack(
           'deal-details/seller-deposit-check?dealID=$dealID');
 
       if (response.statusCode == 200) {
-        print('sellerChecked : ${response.body}');
         setState(
           () {
             isChecked = true;
@@ -162,12 +162,10 @@ class _TranDetailPageState extends State<TranDetailPage> {
     } catch (e) {
       throw Exception(e);
     }
+    }
   }
 
   bool identifySeller() {
-    print(tranDetail.sellerPhone);
-    print(widget.userInfo.user?.phone);
-    print(tranDetail.sellerPhone == widget.userInfo.user?.phone);
     return tranDetail.sellerPhone == widget.userInfo.user?.phone;
   }
 
@@ -179,7 +177,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('userInfo : ${widget.userInfo.user?.phone}');
     return Scaffold(
       appBar: const BackNavBar(),
       backgroundColor: const Color(0xFF23225C),
@@ -244,10 +241,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                             onChanged: (value) {
                               if (isChecked == false) {
                                 if (identifySeller()) {
-                                  print('나 판매자');
                                   sellerChecked();
                                 } else {
-                                  print('나 구매자');
                                   buyerChecked();
                                 }
                               }
@@ -403,7 +398,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '입금 현황'),
                         ],
                       ),
-                      tranDetail.depositStatus == false
+                      tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE"
                           ? const Text(
                               '입금 전',
                               style: TextStyle(
