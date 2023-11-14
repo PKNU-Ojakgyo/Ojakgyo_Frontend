@@ -179,9 +179,10 @@ class _TranDetailPageState extends State<TranDetailPage> {
           .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
 
       if (response.statusCode == 200) {
+        print(response.body);
         setState(
           () {
-            tranDetail.dealStatus = response.body;
+            tranDetail.dealStatus = "COMPlETE";
           },
         );
       }
@@ -621,8 +622,8 @@ class _TranDetailPageState extends State<TranDetailPage> {
                         ],
                       ),
                       tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK" &&
-                              tranDetail.dealStatus == "DEALING" &&
-                              !identifySeller()
+                              !identifySeller() &&
+                              tranDetail.dealStatus == "DEALING"
                           ? ChooseBtn(
                               title: '거래 완료하기',
                               onPressed: () {
@@ -644,6 +645,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                                           btnName: '완료',
                                           onPressed: () {
                                             completeDeal();
+                                            Navigator.pop(context);
                                           },
                                           isModal: true,
                                         ),
