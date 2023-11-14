@@ -47,7 +47,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
   Future<void> sendToken() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
-    print(dealID);
     try {
       http.Response response =
           await authToken.authTokenCallBack('deal-details?dealId=$dealID');
@@ -55,15 +54,26 @@ class _TranDetailPageState extends State<TranDetailPage> {
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
             jsonDecode(utf8.decode(response.bodyBytes));
-            print(responseData);
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
+        });
+        print(tranDetail.sellerPhone == widget.userInfo.user?.phone);
+        setState(() {
+          if (tranDetail.sellerPhone == widget.userInfo.user?.phone) {
+            if (tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK") {
+              isChecked = true;
+            }
+          } else {
+            if (tranDetail.depositStatus != "BUYER_DEPOSIT_BEFORE") {
+              isChecked = true;
+            }
+          }
         });
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
       }
     } catch (e) {
-      throw Exception(e);
+      throw Exception("Error : $e");
     }
   }
 
@@ -73,7 +83,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
     try {
       http.Response response = await authToken
           .authTokenCallBack('/contract/details?contractId=$contractID');
-      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
@@ -119,56 +128,67 @@ class _TranDetailPageState extends State<TranDetailPage> {
   Future<void> buyerChecked() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
-    try {
-      http.Response response = await authToken
-          .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
-      print(jsonDecode(response.body));
 
-      if (response.statusCode == 200) {
-      } else {
-        setState(
-          () {
-            isChecked = false;
-          },
-        );
+    if (tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE") {
+      try {
+        http.Response response = await authToken.authTokenCallBack(
+            'deal-details/buyer-deposit-complete?dealId=$dealID');
+
+        if (response.statusCode == 200) {
+          setState(() {
+            isChecked = true;
+            tranDetail.lockerPassword = response.body;
+          });
+        }
+      } catch (e) {
+        throw Exception("ERROR : $e");
       }
-    } catch (e) {
-      throw Exception(e);
     }
   }
 
   Future<void> sellerChecked() async {
     int? dealID = widget.dealId;
     AuthTokenGet authToken = AuthTokenGet();
+
+    if (tranDetail.depositStatus == "BUYER_DEPOSIT_COMPLETE") {
+      try {
+        http.Response response = await authToken.authTokenCallBack(
+            'deal-details/seller-deposit-check?dealId=$dealID');
+
+        if (response.statusCode == 200) {
+          setState(() {
+            isChecked = true;
+          });
+        }
+      } catch (e) {
+        throw Exception(e);
+      }
+    }
+  }
+
+  bool identifySeller() {
+    return tranDetail.sellerPhone == widget.userInfo.user?.phone;
+  }
+
+  Future<void> completeDeal() async {
+    int? dealID = widget.dealId;
+    AuthTokenGet authToken = AuthTokenGet();
+
     try {
-      http.Response response = await authToken.authTokenCallBack(
-          'deal-details/seller-deposit-check?dealID=$dealID');
+      http.Response response = await authToken
+          .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
 
       if (response.statusCode == 200) {
-        print('sellerChecked : ${response.body}');
+        print(response.body);
         setState(
           () {
-            isChecked = true;
-            tranDetail.lockerPassword = response.body;
-          },
-        );
-      } else {
-        setState(
-          () {
-            isChecked = false;
+            tranDetail.dealStatus = "COMPlETE";
           },
         );
       }
     } catch (e) {
       throw Exception(e);
     }
-  }
-
-  bool identifySeller() {
-    print(tranDetail.sellerPhone);
-    print(widget.userInfo.user?.phone);
-    print(tranDetail.sellerPhone == widget.userInfo.user?.phone);
-    return tranDetail.sellerPhone == widget.userInfo.user?.phone;
   }
 
   @override
@@ -179,7 +199,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('userInfo : ${widget.userInfo.user?.phone}');
     return Scaffold(
       appBar: const BackNavBar(),
       backgroundColor: const Color(0xFF23225C),
@@ -209,17 +228,21 @@ class _TranDetailPageState extends State<TranDetailPage> {
                     const SizedBox(
                       height: 3,
                     ),
-                    tranDetail.contactId == -1 ? Container() : Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        tranDetail.dealStatus != 'BEFORE' ? Container() : const Text(
-                          '서명하지 않은 간이계약서가 존재합니다.\n서명 후 거래 등록이 완료됩니다.',
-                          style: TextStyle(
-                            color: Colors.red,
+                    tranDetail.contactId == -1
+                        ? Container()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              tranDetail.dealStatus != 'BEFORE'
+                                  ? Container()
+                                  : const Text(
+                                      '서명하지 않은 간이계약서가 존재합니다.\n서명 후 거래 등록이 완료됩니다.',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                     const SubTitle(subTitle: '입금 현황'),
                     Row(
                       children: [
@@ -242,14 +265,10 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           child: Checkbox(
                             value: isChecked,
                             onChanged: (value) {
-                              if (isChecked == false) {
-                                if (identifySeller()) {
-                                  print('나 판매자');
-                                  sellerChecked();
-                                } else {
-                                  print('나 구매자');
-                                  buyerChecked();
-                                }
+                              if (identifySeller()) {
+                                sellerChecked();
+                              } else {
+                                buyerChecked();
                               }
                             },
                           ),
@@ -403,7 +422,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '입금 현황'),
                         ],
                       ),
-                      tranDetail.depositStatus == false
+                      tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE"
                           ? const Text(
                               '입금 전',
                               style: TextStyle(
@@ -434,26 +453,156 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '비밀번호 및 시간 내역'),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(tranDetail.createLockerPwdAt ?? 'Unknown'),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            tranDetail.lockerPassword ?? 'Unknown',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],
-                      ),
-                      const Text(
-                        '입금 확인 후 비밀번호가 공개됩니다.',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
+                      identifySeller()
+                          ? tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE"
+                              ? Row(
+                                  children: [
+                                    Text(tranDetail.createLockerPwdAt ??
+                                        'Unknown'),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      tranDetail.lockerPassword ?? 'Unknown',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : tranDetail.depositStatus ==
+                                      "BUYER_DEPOSIT_COMPLETE"
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(tranDetail.createLockerPwdAt ??
+                                                'Unknown'),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Text(
+                                              "******",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Text(
+                                          "구매자가 입금을 완료하여 새로운 비밀번호가 생성되었습니다.",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        const Text(
+                                          "판매자가 입금을 확인하면 구매자에게 비밀번호가 공개됩니다.",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(tranDetail.createLockerPwdAt ??
+                                                'Unknown'),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Text(
+                                              "******",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Text(
+                                          "판매자가 입금을 확인하여 구매자에게만 비밀번호가 공개되었습니다.",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                          : tranDetail.depositStatus == "BUYER_DEPOSIT_BEFORE"
+                              ? Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(tranDetail.createLockerPwdAt ??
+                                            'Unknown'),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        const Text(
+                                          "******",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Text(
+                                      "구매자가 입금 전이므로 판매자에게만 비밀번호가 공개되었습니다.",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : tranDetail.depositStatus ==
+                                      "BUYER_DEPOSIT_COMPLETE"
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(tranDetail.createLockerPwdAt ??
+                                                'Unknown'),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Text(
+                                              "******",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Text(
+                                          "구매자가 입금을 완료하여 새로운 비밀번호가 생성되었습니다.",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        const Text(
+                                          "판매자가 입금을 확인하면 구매자에게 비밀번호가 공개됩니다.",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Text(tranDetail.createLockerPwdAt ??
+                                            'Unknown'),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          tranDetail.lockerPassword ??
+                                              'Unknown',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -472,12 +621,47 @@ class _TranDetailPageState extends State<TranDetailPage> {
                           const SubTitle(subTitle: '거래 상태'),
                         ],
                       ),
-                      Text(
-                        dealState[tranDetail.dealStatus] ?? 'Unknown',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
+                      tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK" &&
+                              !identifySeller() &&
+                              tranDetail.dealStatus == "DEALING"
+                          ? ChooseBtn(
+                              title: '거래 완료하기',
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      title: const Text('알림'),
+                                      content: const Text('거래를 완료하시겠습니까?'),
+                                      actions: [
+                                        RegisterBtn(
+                                          btnName: '취소',
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          isModal: true,
+                                        ),
+                                        RegisterBtn(
+                                          btnName: '완료',
+                                          onPressed: () {
+                                            completeDeal();
+                                            Navigator.pop(context);
+                                          },
+                                          isModal: true,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              isNotChooseBtn: true,
+                            )
+                          : Text(
+                              dealState[tranDetail.dealStatus] ?? 'Unknown',
+                              style: const TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
                       const SizedBox(
                         height: 5,
                       ),
@@ -489,37 +673,38 @@ class _TranDetailPageState extends State<TranDetailPage> {
                             onPressed: () {
                               if (tranDetail.dealStatus == "BEFORE") {
                                 showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomAlertDialog(
-                                    title: const Text('경고'),
-                                    content: const Text('거래를 파기하시겠습니까?'),
-                                    actions: [
-                                      RegisterBtn(
-                                        btnName: '파기',
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        isModal: true,
-                                      ),
-                                      RegisterBtn(
-                                        btnName: '취소',
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        isModal: true,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomAlertDialog(
+                                      title: const Text('경고'),
+                                      content: const Text('거래를 파기하시겠습니까?'),
+                                      actions: [
+                                        RegisterBtn(
+                                          btnName: '파기',
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          isModal: true,
+                                        ),
+                                        RegisterBtn(
+                                          btnName: '취소',
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          isModal: true,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               } else {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return CustomAlertDialog(
                                       title: const Text('알림'),
-                                      content: const Text('진행 중이거나 완료된 거래는 파기할 수 없습니다.'),
+                                      content: const Text(
+                                          '진행 중이거나 완료된 거래는 파기할 수 없습니다.'),
                                       actions: [
                                         RegisterBtn(
                                           btnName: '확인',
@@ -533,7 +718,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
                                   },
                                 );
                               }
-                              
                             },
                             isModal: false,
                           ),
