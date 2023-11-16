@@ -25,7 +25,6 @@ class _AppState extends State<MainPage> {
     AuthTokenGet authToken = AuthTokenGet();
     try {
       http.Response response = await authToken.authTokenCallBack('user/main');
-      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
@@ -33,7 +32,6 @@ class _AppState extends State<MainPage> {
         setState(() {
           userInfo = UserInfoModel.fromJson(responseData);
         });
-        print(userInfo);
       } else {
         throw Exception('데이터를 불러오지 못했습니다.');
       }
@@ -51,7 +49,6 @@ class _AppState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     List<UserDealLists>? dealLists = userInfo.userDealLists;
-    print('dealLists : $dealLists');
 
     Map<String, dynamic> dealState = {
       'BEFORE': '거래 전',
@@ -89,8 +86,8 @@ class _AppState extends State<MainPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MyPage(
-                                  userInfo: userInfo,
-                                )),
+                                      userInfo: userInfo,
+                                    )),
                           )
                         },
                         child: Container(

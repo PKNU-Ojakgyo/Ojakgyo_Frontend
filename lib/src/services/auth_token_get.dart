@@ -26,10 +26,7 @@ class AuthTokenGet {
 
   Future<http.Response> authTokenCallBack(String page) async {
     if (AuthTokenManage.isLoggedIn()) {
-      print('로그인 성공');
       final authToken = AuthTokenManage.getToken();
-      print('auth : $authToken');
-
       final response = await http.get(
         Uri.parse('$baseURL/$page'),
         headers: {
@@ -37,6 +34,26 @@ class AuthTokenGet {
         },
       );
       return response;
+    } else {
+      throw Exception('로그인 상태가 아닙니다.');
+    }
+  }
+}
+
+class AuthTokenDelete {
+  final String baseURL =
+      'http://ec2-15-164-170-1.ap-northeast-2.compute.amazonaws.com:8080';
+
+  Future<int> authTokenCallback(int dealId) async {
+    if (AuthTokenManage.isLoggedIn()) {
+      final authToken = AuthTokenManage.getToken();
+      final response = await http.delete(
+        Uri.parse('$baseURL/deal/delete?dealId=$dealId'),
+        headers: {
+          'Authorization': '$authToken',
+        },
+      );
+      return response.statusCode;
     } else {
       throw Exception('로그인 상태가 아닙니다.');
     }
