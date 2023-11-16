@@ -74,7 +74,6 @@ class _AppState extends State<RegisterTranPage> {
 
   Future<int> submit(BuildContext context) async {
     try {
-      print('try 들어왔다.');
       int dealId = await _registerPost.registerPost(
         bank: accountBankController!,
         account: accountController.text,
@@ -85,10 +84,8 @@ class _AppState extends State<RegisterTranPage> {
         lockerId: lockerIDController.text,
         isSeller: isSeller ?? false,
       );
-      print('register post완성했다.');
       return dealId;
     } catch (e) {
-      print("error message : $e");
       return -1;
     }
   }
@@ -162,7 +159,7 @@ class _AppState extends State<RegisterTranPage> {
                 hintText: '거래를 진행할 락커의 ID를 입력하세요.',
                 isDefault: true,
                 controller: lockerIDController,
-                ),
+              ),
               TextInput(
                 textType: '락커 주소',
                 hintText: '거래를 진행할 락커의 주소를 입력하세요.',
@@ -351,7 +348,6 @@ class _AppState extends State<RegisterTranPage> {
                                   btnName: '확인',
                                   onPressed: () async {
                                     dealId = await submit(context);
-                                    print("dealId : $dealId");
                                     if (!mounted) return;
                                     if (int.parse(itemPriceController.text) >=
                                         50000) {

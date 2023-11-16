@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/services/auth_token_get.dart';
+import 'package:ojakgyo/src/services/tran_detail_model.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 import 'package:ojakgyo/widgets/line.dart';
@@ -7,6 +9,9 @@ import 'package:ojakgyo/widgets/register_btn.dart';
 import 'package:ojakgyo/widgets/signpad.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/modify_contract.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class WriteContractPage extends StatefulWidget {
   const WriteContractPage({
@@ -28,6 +33,32 @@ class _WriteContractPageState extends State<WriteContractPage> {
       text:
           '(1) 이 계약서에 명시되지 않은 사항에 대해서는 상호 합의하여 정합니다.\n(2) 이 계약서는 양 당사자가 본 계약서 내용을 충분히 이해하고 서명함으로써 효력이 발생합니다.\n(3) 이 계약서는 전자 문서로서도 유효하며, 이 경우에는 양 당사자가 전자 서명함으로써 효력이 발생합니다.\n(4) 본 계약서는 복사본으로도 효력이 있습니다.');
 
+  TranDetailModel tranDetail = TranDetailModel();
+
+  Future<void> sendToken() async {
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal-details?dealId=${widget.dealId}');
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        setState(() {
+          tranDetail = TranDetailModel.fromJson(responseData);
+        });
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sendToken();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +73,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
               const MainTitle(mainTitle: '간이계약서 작성'),
               const Line(),
               const SubTitle(subTitle: '거래 당사자의 정보'),
-              const Row(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -50,16 +81,16 @@ class _WriteContractPageState extends State<WriteContractPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '판매자',
+                        const Text(
+                          '<판매자>',
                           style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text('성명 : 김철수'),
-                        Text('연락처 : 010-1234-5678'),
-                        Text('은행 : 농협'),
-                        Text('계좌번호 : 32114341434143'),
+                        Text('성명 : ${tranDetail.sellerName}'),
+                        Text('연락처 : ${tranDetail.sellerPhone}'),
+                        Text('은행 : ${tranDetail.bank}'),
+                        Text('계좌번호 : ${tranDetail.account}'),
                       ],
                     ),
                   ),
@@ -67,14 +98,14 @@ class _WriteContractPageState extends State<WriteContractPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '구매자',
+                        const Text(
+                          '<구매자>',
                           style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text('성명 : 박영희'),
-                        Text('연락처 : 010-9876-5432'),
+                        Text('성명 : ${tranDetail.buyerName}'),
+                        Text('연락처 : ${tranDetail.buyerPhone}'),
                       ],
                     ),
                   ),
@@ -84,15 +115,15 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 물품의 정보'),
-              const Text('물품명 : Apple airpod Pro 2세대 2023년형'),
-              const Text('상태 : 중고 (사용 기간 6개월, 상태 양호)'),
-              const Text('거래 금액: 1,200,000원'),
+              Text('물품명 : ${tranDetail.itemName}'),
+              Text('상태 : ${tranDetail.condition}'),
+              Text('거래 금액: ${tranDetail.price}원'),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 조건'),
               const Text('(1) 거래 일시: 범위(사물함에 보관할 수 있는 범위)'),
-              const Text('(2) 거래 장소: 사물함 위치'),
+              Text('(2) 거래 장소: ${tranDetail.lockerAddress}'),
               const Text('(3) 결제 방법: 계좌이체'),
               const SizedBox(
                 height: 10,

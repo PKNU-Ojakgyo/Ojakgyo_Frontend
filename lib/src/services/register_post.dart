@@ -15,12 +15,8 @@ class RegisterPost {
     required String dealerId,
     required String lockerId,
     required bool isSeller,
-  }) 
-  async {
+  }) async {
     String? authToken = AuthTokenManage.getToken();
-    print(authToken);
-
-    print("이제 서버로 보낸다..");
 
     final Map<String, dynamic> requestData = {
       'bank': bank,
@@ -40,19 +36,12 @@ class RegisterPost {
 
     final response = await http.Client().send(request);
 
-
-    print("보냄");
-
     if (response.statusCode == 200) {
-      print("서버로 갔다");
-      final responseBody = await response.stream.bytesToString(); // 스트림 데이터를 문자열로 변환
-      final responseData = json.decode(responseBody); // JSON으로 파싱
+      final responseBody = await response.stream.bytesToString();
+      final responseData = json.decode(responseBody);
       final int dealId = responseData['dealId'];
-
-
       return dealId;
     } else {
-      print(response.statusCode);
       return -999;
     }
   }

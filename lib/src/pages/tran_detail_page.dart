@@ -57,7 +57,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
         });
-        print(tranDetail.sellerPhone == widget.userInfo.user?.phone);
         setState(() {
           if (tranDetail.sellerPhone == widget.userInfo.user?.phone) {
             if (tranDetail.depositStatus == "SELLER_DEPOSIT_CHECK") {
