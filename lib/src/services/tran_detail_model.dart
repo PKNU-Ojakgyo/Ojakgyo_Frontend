@@ -14,6 +14,7 @@ class TranDetailModel {
   String? depositStatus;
   String? lockerPassword;
   String? createLockerPwdAt;
+  String? createAtDeal;
   String? dealStatus;
 
   TranDetailModel(
@@ -32,6 +33,7 @@ class TranDetailModel {
       depositStatus,
       lockerPassword,
       createLockerPwdAt,
+      createAtDeal,
       dealStatus});
 
   TranDetailModel.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class TranDetailModel {
     depositStatus = json['depositStatus'];
     lockerPassword = json['lockerPassword'];
     createLockerPwdAt = json['createLockerPwdAt'];
+    createAtDeal = json['createAtDeal'];
     dealStatus = json['dealStatus'];
   }
 
@@ -70,6 +73,7 @@ class TranDetailModel {
     data['depositStatus'] = depositStatus;
     data['lockerPassword'] = lockerPassword;
     data['createLockerPwdAt'] = createLockerPwdAt;
+    data['createAtDeal'] = createAtDeal;
     data['dealStatus'] = dealStatus;
     return data;
   }

@@ -94,7 +94,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          '<판매자>',
+                          '< 판매자 >',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
@@ -111,7 +111,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          '<구매자>',
+                          '< 구매자 >',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                           ),
