@@ -4,9 +4,17 @@ import 'package:ojakgyo/widgets/register_btn.dart';
 import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:ojakgyo/src/pages/main_page.dart';
+import 'package:ojakgyo/src/services/signature_post.dart';
 
 class SignPad extends StatefulWidget {
-  const SignPad({Key? key}) : super(key: key);
+  const SignPad({
+    Key? key,
+    required this.isSeller,
+    required this.contractId,
+  }) : super(key: key);
+
+  final bool isSeller;
+  final int contractId;
 
   @override
   State<SignPad> createState() => _SignPadState();
@@ -14,6 +22,27 @@ class SignPad extends StatefulWidget {
 
 class _SignPadState extends State<SignPad> {
   final GlobalKey<SfSignaturePadState> _signaturePadGlobalKey = GlobalKey();
+  final SignaturePost _signaturePost = SignaturePost();
+
+  Future<int> sendSign() async {
+    final signatureImage = await _signaturePadGlobalKey.currentState!.toImage();
+    final signatureBytes =
+        await signatureImage.toByteData(format: ui.ImageByteFormat.png);
+    final signatureBase64 = base64Encode(signatureBytes!.buffer.asUint8List());
+
+    print(signatureBase64);
+
+    try {
+      int contractId = await _signaturePost.signaturePost(
+          isSeller: widget.isSeller,
+          signature: signatureBase64,
+          contractId: widget.contractId);
+
+      return contractId;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +97,7 @@ class _SignPadState extends State<SignPad> {
         RegisterBtn(
           btnName: '확인',
           onPressed: () async {
-            // 이미지 파일로 받아서 Encode
-            // final signatureImage =
-            //     await _signaturePadGlobalKey.currentState!.toImage();
-            // final signatureBytes =
-            //     await signatureImage.toByteData(format: ui.ImageByteFormat.png);
-            // final signatureBase64 =
-            //     base64Encode(signatureBytes!.buffer.asUint8List());
+            sendSign();
 
             if (!mounted) return;
             Navigator.push(

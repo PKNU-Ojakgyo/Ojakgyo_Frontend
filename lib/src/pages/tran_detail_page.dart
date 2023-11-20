@@ -178,7 +178,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
           .authTokenCallBack('deal-details/buyer-deal-complete?dealId=$dealID');
 
       if (response.statusCode == 200) {
-        print(response.body);
         setState(
           () {
             tranDetail.dealStatus = "COMPlETE";

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:ojakgyo/src/services/tran_detail_model.dart';
+import 'package:ojakgyo/src/services/user_info_model.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 import 'package:ojakgyo/widgets/line.dart';
@@ -16,9 +17,11 @@ import 'package:http/http.dart' as http;
 class WriteContractPage extends StatefulWidget {
   const WriteContractPage({
     Key? key,
+    required this.userInfo,
     required this.dealId,
   }) : super(key: key);
 
+  final UserInfoModel userInfo;
   final int dealId;
 
   @override
@@ -37,6 +40,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
 
   Future<void> sendToken() async {
     AuthTokenGet authToken = AuthTokenGet();
+    print(widget.dealId);
     try {
       http.Response response = await authToken
           .authTokenCallBack('deal-details?dealId=${widget.dealId}');
@@ -46,17 +50,25 @@ class _WriteContractPageState extends State<WriteContractPage> {
             jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
+          print('계약서 쓰기 $responseData');
         });
+      } else {
+        print('실패지롱 ${response.statusCode}');
       }
     } catch (e) {
       throw Exception(e);
     }
   }
 
+  bool isSeller() {
+    return tranDetail.sellerName == widget.userInfo.user?.name;
+  }
+
   @override
   void initState() {
     super.initState();
     sendToken();
+    print(tranDetail.buyerName);
   }
 
   @override
@@ -224,7 +236,10 @@ class _WriteContractPageState extends State<WriteContractPage> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return const SignPad();
+                                        return SignPad(
+                                          isSeller: isSeller(),
+                                          contractId: tranDetail.contactId!,
+                                        );
                                       },
                                     );
                                   },
