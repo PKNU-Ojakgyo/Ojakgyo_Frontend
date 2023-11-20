@@ -30,7 +30,7 @@ class SignaturePost {
     if (response.statusCode == 200) {
       final responseBody = await response.stream.bytesToString();
       final responseData = json.decode(responseBody);
-      print(responseData);
+      print('response는 이렇습니다.. $responseData');
 
       return contractId;
     } else {

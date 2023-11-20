@@ -30,8 +30,6 @@ class _SignPadState extends State<SignPad> {
         await signatureImage.toByteData(format: ui.ImageByteFormat.png);
     final signatureBase64 = base64Encode(signatureBytes!.buffer.asUint8List());
 
-    print(signatureBase64);
-
     try {
       int contractId = await _signaturePost.signaturePost(
           isSeller: widget.isSeller,
@@ -106,9 +104,6 @@ class _SignPadState extends State<SignPad> {
                 builder: (context) => const MainPage(),
               ),
             );
-
-            // 서버에서 받아올 때 Decode 테스트
-            // final signatureBytes_result = base64Decode(signatureBase64);
           },
           isModal: true,
         ),

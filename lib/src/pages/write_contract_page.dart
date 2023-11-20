@@ -190,13 +190,13 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '판매자'),
-              const Row(
+              Row(
                 children: [
-                  Text('김철수'),
-                  SizedBox(
+                  Text(tranDetail.sellerName ?? 'Unknown'),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('(인)'),
+                  const Text('(인)'),
                 ],
               ),
               const Text('일자 : 2023년 8월 17일'),
@@ -204,13 +204,13 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '구매자'),
-              const Row(
+              Row(
                 children: [
-                  Text('박영희'),
-                  SizedBox(
+                  Text(tranDetail.buyerName ?? 'Unknown'),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('(인)'),
+                  const Text('(인)'),
                 ],
               ),
               const Text('일자 : 2023년 8월 17일'),

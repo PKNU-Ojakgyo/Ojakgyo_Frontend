@@ -54,6 +54,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
             jsonDecode(utf8.decode(response.bodyBytes));
+        print('이것은 tranDetail $responseData');
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
         });
