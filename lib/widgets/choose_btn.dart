@@ -15,7 +15,7 @@ class ChooseBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: isNotChooseBtn ? 140 : 90,
+      width: isNotChooseBtn ? 180 : 90,
       height: isNotChooseBtn ? 33 : 35,
       child: ElevatedButton(
         onPressed: onPressed,

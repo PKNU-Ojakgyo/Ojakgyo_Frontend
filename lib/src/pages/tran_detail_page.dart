@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:ojakgyo/src/pages/view_contract_page.dart';
 import 'package:ojakgyo/src/pages/main_page.dart';
@@ -207,6 +208,15 @@ class _TranDetailPageState extends State<TranDetailPage> {
     }
   }
 
+  void launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -357,6 +367,18 @@ class _TranDetailPageState extends State<TranDetailPage> {
                       ),
                       Text('락커 아이디 : ${tranDetail.lockerId}'),
                       Text('락커 주소 : ${tranDetail.lockerAddress}'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      tranDetail.dealStatus == 'DEALING'
+                          ? ChooseBtn(
+                              title: '실시간 영상',
+                              onPressed: () {
+                                launchURL('http://192.168.34.159:81/stream');
+                              },
+                              isNotChooseBtn: true,
+                            )
+                          : Container(),
                       const SizedBox(
                         height: 10,
                       ),
