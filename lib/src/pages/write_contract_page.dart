@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ojakgyo/src/services/auth_token_get.dart';
+import 'package:ojakgyo/src/services/contract_post.dart';
 import 'package:ojakgyo/src/services/tran_detail_model.dart';
 import 'package:ojakgyo/src/services/user_info_model.dart';
 import 'package:ojakgyo/widgets/back_navbar.dart';
@@ -38,9 +39,11 @@ class _WriteContractPageState extends State<WriteContractPage> {
 
   TranDetailModel tranDetail = TranDetailModel();
 
+  final ContractPost _contractPost = ContractPost();
+  late int contractId;
+
   Future<void> sendToken() async {
     AuthTokenGet authToken = AuthTokenGet();
-    print(widget.dealId);
     try {
       http.Response response = await authToken
           .authTokenCallBack('deal-details?dealId=${widget.dealId}');
@@ -50,10 +53,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
             jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
-          print('계약서 쓰기 $responseData');
         });
-      } else {
-        print('실패지롱 ${response.statusCode}');
       }
     } catch (e) {
       throw Exception(e);
@@ -64,11 +64,24 @@ class _WriteContractPageState extends State<WriteContractPage> {
     return tranDetail.sellerName == widget.userInfo.user?.name;
   }
 
+  Future<int> submit() async {
+    try {
+      int contractId = await _contractPost.contractPost(
+          dealId: widget.dealId,
+          repAndRes: indemnificationLiabilityController.text,
+          note: etcController.text,
+          price: tranDetail.price!);
+
+      return contractId;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     sendToken();
-    print(tranDetail.buyerName);
   }
 
   @override
@@ -134,7 +147,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 조건'),
-              const Text('(1) 거래 일시: 범위(사물함에 보관할 수 있는 범위)'),
+              Text('(1) 거래 일시: ${tranDetail.createAtDeal}'),
               Text('(2) 거래 장소: ${tranDetail.lockerAddress}'),
               const Text('(3) 결제 방법: 계좌이체'),
               const SizedBox(
@@ -199,7 +212,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                   const Text('(인)'),
                 ],
               ),
-              const Text('일자 : 2023년 8월 17일'),
+              const Text('일자 : '),
               const SizedBox(
                 height: 10,
               ),
@@ -213,7 +226,7 @@ class _WriteContractPageState extends State<WriteContractPage> {
                   const Text('(인)'),
                 ],
               ),
-              const Text('일자 : 2023년 8월 17일'),
+              const Text('일자 :'),
               const SizedBox(
                 width: 20,
               ),
@@ -232,13 +245,17 @@ class _WriteContractPageState extends State<WriteContractPage> {
                               actions: [
                                 RegisterBtn(
                                   btnName: '예',
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    contractId = await submit();
+                                    print(
+                                        '계약서 submit후 return contractId : $contractId');
+                                    if (!mounted) return;
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return SignPad(
                                           isSeller: isSeller(),
-                                          contractId: tranDetail.contactId!,
+                                          contractId: contractId,
                                         );
                                       },
                                     );

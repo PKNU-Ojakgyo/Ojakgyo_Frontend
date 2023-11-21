@@ -24,19 +24,19 @@ class _SignPadState extends State<SignPad> {
   final GlobalKey<SfSignaturePadState> _signaturePadGlobalKey = GlobalKey();
   final SignaturePost _signaturePost = SignaturePost();
 
-  Future<int> sendSign() async {
+  Future<String> sendSign() async {
     final signatureImage = await _signaturePadGlobalKey.currentState!.toImage();
     final signatureBytes =
         await signatureImage.toByteData(format: ui.ImageByteFormat.png);
     final signatureBase64 = base64Encode(signatureBytes!.buffer.asUint8List());
 
     try {
-      int contractId = await _signaturePost.signaturePost(
+      String signAt = await _signaturePost.signaturePost(
           isSeller: widget.isSeller,
           signature: signatureBase64,
           contractId: widget.contractId);
 
-      return contractId;
+      return signAt;
     } catch (e) {
       throw Exception(e);
     }
@@ -95,7 +95,8 @@ class _SignPadState extends State<SignPad> {
         RegisterBtn(
           btnName: '확인',
           onPressed: () async {
-            sendSign();
+            String signAt = await sendSign();
+            print(signAt);
 
             if (!mounted) return;
             Navigator.push(

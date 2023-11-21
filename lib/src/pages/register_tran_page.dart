@@ -87,8 +87,7 @@ class _AppState extends State<RegisterTranPage> {
       );
       return dealId;
     } catch (e) {
-      print('error message $e');
-      return -1;
+      throw Exception(e);
     }
   }
 

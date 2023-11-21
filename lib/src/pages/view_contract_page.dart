@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:ojakgyo/src/services/auth_token_get.dart';
+import 'package:ojakgyo/src/services/contract_detail_model.dart';
+import 'package:ojakgyo/src/services/tran_detail_model.dart';
 
 import 'package:ojakgyo/widgets/back_navbar.dart';
 import 'package:ojakgyo/widgets/main_title.dart';
@@ -6,21 +12,46 @@ import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
 
-import 'package:ojakgyo/src/services/contract_detail_model.dart';
-
 class ViewContractPage extends StatefulWidget {
   const ViewContractPage({
     Key? key,
-    required this.contractDetailInfo,
+    required this.tranDetail,
   }) : super(key: key);
 
-  final ContractDetailModel contractDetailInfo;
+  final TranDetailModel tranDetail;
 
   @override
   State<ViewContractPage> createState() => _ViewContractPageState();
 }
 
 class _ViewContractPageState extends State<ViewContractPage> {
+  ContractDetailModel contractDetail = ContractDetailModel();
+
+  Future<void> sendToken() async {
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken.authTokenCallBack(
+          'contract/details?contractId=${widget.tranDetail.contactId}');
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        print(responseData);
+        setState(() {
+          contractDetail = ContractDetailModel.fromJson(responseData);
+        });
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sendToken();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +92,7 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 ],
               ),
               const SubTitle(subTitle: '거래 당사자의 정보'),
-              const Row(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -69,16 +100,16 @@ class _ViewContractPageState extends State<ViewContractPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '판매자',
+                        const Text(
+                          '< 판매자 >',
                           style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text('성명 : 김철수'),
-                        Text('연락처 : 010-1234-5678'),
-                        Text('은행 : 농협'),
-                        Text('계좌번호 : 32114341434143'),
+                        Text('성명 : ${widget.tranDetail.sellerName}'),
+                        Text('연락처 : ${widget.tranDetail.sellerPhone}'),
+                        Text('은행 : ${widget.tranDetail.bank}'),
+                        Text('계좌번호 : ${widget.tranDetail.account}'),
                       ],
                     ),
                   ),
@@ -86,14 +117,14 @@ class _ViewContractPageState extends State<ViewContractPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '구매자',
+                        const Text(
+                          '< 구매자 >',
                           style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text('성명 : 박영희'),
-                        Text('연락처 : 010-9876-5432'),
+                        Text('성명 : ${widget.tranDetail.buyerName}'),
+                        Text('연락처 : ${widget.tranDetail.buyerPhone}'),
                       ],
                     ),
                   ),
@@ -103,15 +134,15 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 물품의 정보'),
-              const Text('물품명 : Apple airpod Pro 2세대 2023년형'),
-              const Text('상태 : 중고 (사용 기간 6개월, 상태 양호)'),
-              const Text('거래 금액: 1,200,000원'),
+              Text('물품명 : ${widget.tranDetail.itemName}'),
+              Text('상태 : ${widget.tranDetail.condition}'),
+              Text('거래 금액: ${widget.tranDetail.price}원'),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '거래 조건'),
-              const Text('(1) 거래 일시: 범위(사물함에 보관할 수 있는 범위)'),
-              const Text('(2) 거래 장소: 사물함 위치'),
+              Text('(1) 거래 일시: ${widget.tranDetail.createAtDeal}'),
+              Text('(2) 거래 장소: ${widget.tranDetail.lockerAddress}'),
               const Text('(3) 결제 방법: 계좌이체'),
               const SizedBox(
                 height: 10,
@@ -123,14 +154,12 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '배상 및 책임 등'),
-              const Text(
-                  '(1) 판매자는 물품을 인도하기 전, 물품의 하자나 손상 여부를 확인하여야 합니다.\n(2) 구매자는 물품 수령 후, 물품에 대한 하자나 손상 여부를 확인하여야 합니다.\n(3) 물품의 소유권이 구매자에게 이전되기 전까지 발생하는 모든 손실, 손해, 멸실 또는 파손 등의 책임은 판매자가 부담합니다.\n(4) 물품의 소유권이 구매자에게 이전된 후 발생하는 모든 손실, 손해, 멸실 또는 파손 등의 책임은 구매자가 부담합니다.'),
+              Text('${contractDetail.repAndRes}'),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '기타 사항'),
-              const Text(
-                  '(1) 이 계약서에 명시되지 않은 사항에 대해서는 상호 합의하여 정합니다.\n(2) 이 계약서는 양 당사자가 본 계약서 내용을 충분히 이해하고 서명함으로써 효력이 발생합니다.\n(3) 이 계약서는 전자 문서로서도 유효하며, 이 경우에는 양 당사자가 전자 서명함으로써 효력이 발생합니다.\n(4) 본 계약서는 복사본으로도 효력이 있습니다.'),
+              Text('${contractDetail.note}'),
               const SizedBox(
                 height: 10,
               ),
@@ -141,30 +170,30 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 height: 10,
               ),
               const SubTitle(subTitle: '판매자'),
-              const Row(
+              Row(
                 children: [
-                  Text('김철수'),
-                  SizedBox(
+                  Text('${widget.tranDetail.sellerName}'),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('(인)'),
+                  const Text('(인)'),
                 ],
               ),
-              const Text('일자 : 2023년 8월 17일'),
+              Text('일자 : ${contractDetail.sellerSignatureCreatAt ?? ' '}'),
               const SizedBox(
                 height: 10,
               ),
               const SubTitle(subTitle: '구매자'),
-              const Row(
+              Row(
                 children: [
-                  Text('박영희'),
-                  SizedBox(
+                  Text('${widget.tranDetail.buyerName}'),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text('(인)'),
+                  const Text('(인)'),
                 ],
               ),
-              const Text('일자 : 2023년 8월 17일'),
+              Text('일자 : ${contractDetail.buyerSignatureCreatAt ?? ' '}'),
               const SizedBox(
                 height: 26,
               ),
