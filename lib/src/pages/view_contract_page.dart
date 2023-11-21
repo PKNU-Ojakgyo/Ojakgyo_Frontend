@@ -103,7 +103,7 @@ class _ViewContractPageState extends State<ViewContractPage> {
                     ],
                   ),
                   pw.SizedBox(
-                    height: 10,
+                    height: 12,
                   ),
                   pw.Row(
                     children: [
@@ -441,14 +441,6 @@ class _ViewContractPageState extends State<ViewContractPage> {
     File file = File(filePath);
     await file.writeAsBytes(await pdf.save());
 
-    if (await file.exists()) {
-      print('File exists.');
-    } else {
-      print('File does not exist.');
-    }
-
-    print('File Path: $filePath');
-
     OpenFile.open(filePath);
   }
 
@@ -489,8 +481,11 @@ class _ViewContractPageState extends State<ViewContractPage> {
                     ],
                     onSelected: (String value) {
                       if (value == 'exportToPDF') {
-                        generatePDF(contractDetail.sellerSignature ?? 'Unknown',
-                            contractDetail.buyerSignature ?? 'Unknown');
+                        if (widget.tranDetail.dealStatus != 'BEFORE') {
+                          generatePDF(
+                              contractDetail.sellerSignature ?? 'Unknown',
+                              contractDetail.buyerSignature ?? 'Unknown');
+                        }
                       }
                     },
                   ),
