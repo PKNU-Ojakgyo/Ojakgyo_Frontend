@@ -33,11 +33,11 @@ class _AppState extends State<CounterPartyList> {
   late String modifiedPhone = '';
 
   Map<String, dynamic> dealState = {
-      'BEFORE': '거래 전',
-      'DEALING': '거래 중',
-      'COMPLETED': '거래 완료',
-      'CANCELED': '거래 취소',
-    };
+    'BEFORE': '거래 전',
+    'DEALING': '거래 중',
+    'COMPLETED': '거래 완료',
+    'CANCELED': '거래 취소',
+  };
 
   @override
   void initState() {
@@ -156,81 +156,73 @@ class _AppState extends State<CounterPartyList> {
                 ),
                 Visibility(
                   visible: isToggled,
-                  child: SizedBox(
-                    height: 300,
-                    child: SingleChildScrollView(
-                      child: Column(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Column(
                         children: [
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Column(
-                            children: [
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: widget.dealLists.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final items = widget.dealLists[index];
-                                  return Column(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(18),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(15),
-                                          child: Column(
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: widget.dealLists.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final items = widget.dealLists[index];
+                              return Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15),
+                                      child: Column(
+                                        children: [
+                                          Row(
                                             children: [
-                                              Row(
-                                                children: [
-                                                  const Text("거래 상태 : "),
-                                                  Text(
-                                                    dealState[items.dealStatus] ??
-                                                        'Unknown',
-                                                    style: const TextStyle(
-                                                        color:
-                                                            Colors.redAccent),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const Text("거래 일시 : "),
-                                                  Text(items.updateAt ??
-                                                      'Unknown'),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const Text("거래 물품 : "),
-                                                  Text(items.item ?? 'Unknown'),
-                                                ],
+                                              const Text("거래 상태 : "),
+                                              Text(
+                                                dealState[items.dealStatus] ??
+                                                    'Unknown',
+                                                style: const TextStyle(
+                                                    color: Colors.redAccent),
                                               ),
                                             ],
                                           ),
-                                        ),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Text("거래 일시 : "),
+                                              Text(items.updateAt ?? 'Unknown'),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Text("거래 물품 : "),
+                                              Text(items.item ?? 'Unknown'),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 15,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                ],
+                              );
+                            },
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
