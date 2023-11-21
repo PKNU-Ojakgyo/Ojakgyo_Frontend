@@ -16,7 +16,6 @@ import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 
 import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:ojakgyo/src/services/tran_detail_model.dart';
-import 'package:ojakgyo/src/services/contract_detail_model.dart';
 
 class TranDetailPage extends StatefulWidget {
   const TranDetailPage({
@@ -674,7 +673,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                               isNotChooseBtn: true,
                             )
                           : Text(
-                              dealState[tranDetail.dealStatus] ?? 'Unknown',
+                              dealState[tranDetail.dealStatus] ?? '거래 완료',
                               style: const TextStyle(
                                 color: Colors.red,
                               ),
