@@ -56,25 +56,28 @@ class _AppState extends State<ListCard> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          size: 12,
-                          color: stateColor[widget.tranState],
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          widget.tranState ?? 'Unknown',
-                          style: const TextStyle(
-                            color: Color.fromARGB(221, 53, 53, 53),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                    SizedBox(
+                      width: 80,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 12,
+                            color: stateColor[widget.tranState],
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            widget.tranState ?? 'Unknown',
+                            style: const TextStyle(
+                              color: Color.fromARGB(221, 53, 53, 53),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

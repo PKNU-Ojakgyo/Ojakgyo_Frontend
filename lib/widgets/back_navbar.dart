@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ojakgyo/src/pages/main_page.dart';
 
 class BackNavBar extends StatelessWidget implements PreferredSizeWidget {
   const BackNavBar({super.key});
@@ -12,7 +13,10 @@ class BackNavBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: const Color(0xFF23225C),
       leading: IconButton(
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+          );
         },
         icon: const Icon(Icons.arrow_back_ios),
       ),
