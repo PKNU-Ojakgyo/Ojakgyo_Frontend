@@ -43,7 +43,6 @@ class _TranDetailPageState extends State<TranDetailPage> {
 
   late Map<String, dynamic> responseData;
   TranDetailModel tranDetail = TranDetailModel.fromJson({});
-  ContractDetailModel contractDetail = ContractDetailModel.fromJson({});
 
   Future<void> sendToken() async {
     int? dealID = widget.dealId;
@@ -55,6 +54,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData =
             jsonDecode(utf8.decode(response.bodyBytes));
+        print('이것은 tranDetail $responseData');
         setState(() {
           tranDetail = TranDetailModel.fromJson(responseData);
         });
@@ -82,20 +82,17 @@ class _TranDetailPageState extends State<TranDetailPage> {
     AuthTokenGet authToken = AuthTokenGet();
     try {
       http.Response response = await authToken
-          .authTokenCallBack('/contract/details?contractId=$contractID');
+          .authTokenCallBack('contract/details?contractId=$contractID');
+
+      print(response.statusCode);
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> responseData =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        setState(() {
-          contractDetail = ContractDetailModel.fromJson(responseData);
-        });
         if (!mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ViewContractPage(
-              contractDetailInfo: contractDetail,
+              tranDetail: tranDetail,
             ),
           ),
         );

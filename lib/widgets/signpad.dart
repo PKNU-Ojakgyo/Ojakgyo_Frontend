@@ -4,9 +4,17 @@ import 'package:ojakgyo/widgets/register_btn.dart';
 import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:ojakgyo/src/pages/main_page.dart';
+import 'package:ojakgyo/src/services/signature_post.dart';
 
 class SignPad extends StatefulWidget {
-  const SignPad({Key? key}) : super(key: key);
+  const SignPad({
+    Key? key,
+    required this.isSeller,
+    required this.contractId,
+  }) : super(key: key);
+
+  final bool isSeller;
+  final int contractId;
 
   @override
   State<SignPad> createState() => _SignPadState();
@@ -14,6 +22,25 @@ class SignPad extends StatefulWidget {
 
 class _SignPadState extends State<SignPad> {
   final GlobalKey<SfSignaturePadState> _signaturePadGlobalKey = GlobalKey();
+  final SignaturePost _signaturePost = SignaturePost();
+
+  Future<String> sendSign() async {
+    final signatureImage = await _signaturePadGlobalKey.currentState!.toImage();
+    final signatureBytes =
+        await signatureImage.toByteData(format: ui.ImageByteFormat.png);
+    final signatureBase64 = base64Encode(signatureBytes!.buffer.asUint8List());
+
+    try {
+      String signAt = await _signaturePost.signaturePost(
+          isSeller: widget.isSeller,
+          signature: signatureBase64,
+          contractId: widget.contractId);
+
+      return signAt;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +77,7 @@ class _SignPadState extends State<SignPad> {
             ),
             SfSignaturePad(
               key: _signaturePadGlobalKey,
-              backgroundColor: const Color(0xFFD9D9D9),
+              backgroundColor: Colors.transparent,
               minimumStrokeWidth: 4.0,
               maximumStrokeWidth: 4.0,
             ),
@@ -68,13 +95,8 @@ class _SignPadState extends State<SignPad> {
         RegisterBtn(
           btnName: '확인',
           onPressed: () async {
-            // 이미지 파일로 받아서 Encode
-            // final signatureImage =
-            //     await _signaturePadGlobalKey.currentState!.toImage();
-            // final signatureBytes =
-            //     await signatureImage.toByteData(format: ui.ImageByteFormat.png);
-            // final signatureBase64 =
-            //     base64Encode(signatureBytes!.buffer.asUint8List());
+            String signAt = await sendSign();
+            print(signAt);
 
             if (!mounted) return;
             Navigator.push(
@@ -83,9 +105,6 @@ class _SignPadState extends State<SignPad> {
                 builder: (context) => const MainPage(),
               ),
             );
-
-            // 서버에서 받아올 때 Decode 테스트
-            // final signatureBytes_result = base64Decode(signatureBase64);
           },
           isModal: true,
         ),

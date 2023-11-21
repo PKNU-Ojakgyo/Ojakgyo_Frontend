@@ -3,15 +3,24 @@ class ContractDetailModel {
   String? note;
   String? sellerSignature;
   String? buyerSignature;
+  String? sellerSignatureCreatAt;
+  String? buyerSignatureCreatAt;
 
   ContractDetailModel(
-      {this.repAndRes, this.note, this.sellerSignature, this.buyerSignature});
+      {this.repAndRes,
+      this.note,
+      this.sellerSignature,
+      this.buyerSignature,
+      this.sellerSignatureCreatAt,
+      this.buyerSignatureCreatAt});
 
   ContractDetailModel.fromJson(Map<String, dynamic> json) {
     repAndRes = json['repAndRes'];
     note = json['note'];
     sellerSignature = json['sellerSignature'];
     buyerSignature = json['buyerSignature'];
+    sellerSignatureCreatAt = json['sellerSignatureCreatAt'];
+    buyerSignatureCreatAt = json['buyerSignatureCreatAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -20,6 +29,8 @@ class ContractDetailModel {
     data['note'] = note;
     data['sellerSignature'] = sellerSignature;
     data['buyerSignature'] = buyerSignature;
+    data['sellerSignatureCreatAt'] = sellerSignatureCreatAt;
+    data['buyerSignatureCreatAt'] = buyerSignatureCreatAt;
     return data;
   }
 }

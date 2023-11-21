@@ -76,22 +76,20 @@ class _AppState extends State<RegisterTranPage> {
 
   Future<int> submit(BuildContext context) async {
     try {
-      print('try 들어왔다.');
+      int price = int.parse(itemPriceController.text);
       int dealId = await _registerPost.registerPost(
         bank: accountBankController!,
         account: accountController.text,
-        price: int.parse(itemPriceController.text),
+        price: price,
         itemName: itemNameController.text,
         condition: itemConditionController.text,
-        dealerId: dealerId.toString(),
+        dealerId: dealerId,
         lockerId: lockerIDController.text,
         isSeller: isSeller ?? false,
       );
-      print('register post완성했다.');
       return dealId;
     } catch (e) {
-      print("error message : $e");
-      return -1;
+      throw Exception(e);
     }
   }
 
@@ -375,7 +373,7 @@ class _AppState extends State<RegisterTranPage> {
                                   btnName: '확인',
                                   onPressed: () async {
                                     dealId = await submit(context);
-                                    print("dealId : $dealId");
+                                    print('거래를 등록할 때의 딜 아이디 $dealId');
                                     if (!mounted) return;
                                     if (int.parse(itemPriceController.text) >=
                                         50000) {
@@ -395,6 +393,8 @@ class _AppState extends State<RegisterTranPage> {
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             WriteContractPage(
+                                                          userInfo:
+                                                              widget.userInfo,
                                                           dealId: dealId,
                                                         ),
                                                       ),
