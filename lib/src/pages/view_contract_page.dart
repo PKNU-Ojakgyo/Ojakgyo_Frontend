@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:typed_data';
 
 import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:ojakgyo/src/services/contract_detail_model.dart';
@@ -11,6 +12,7 @@ import 'package:ojakgyo/widgets/main_title.dart';
 import 'package:ojakgyo/widgets/sub_title.dart';
 import 'package:ojakgyo/widgets/line.dart';
 import 'package:ojakgyo/widgets/register_btn.dart';
+import 'package:ojakgyo/widgets/signpad.dart';
 
 class ViewContractPage extends StatefulWidget {
   const ViewContractPage({
@@ -44,6 +46,18 @@ class _ViewContractPageState extends State<ViewContractPage> {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  Widget decodeSignature(String signature) {
+    Uint8List decodeBytes = base64.decode(signature);
+
+    Image signatureImg = Image.memory(
+      decodeBytes,
+      width: 50,
+      height: 50,
+    );
+
+    return signatureImg;
   }
 
   @override
@@ -102,9 +116,6 @@ class _ViewContractPageState extends State<ViewContractPage> {
                       children: [
                         const Text(
                           '< 판매자 >',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                         Text('성명 : ${widget.tranDetail.sellerName}'),
                         Text('연락처 : ${widget.tranDetail.sellerPhone}'),
@@ -119,9 +130,6 @@ class _ViewContractPageState extends State<ViewContractPage> {
                       children: [
                         const Text(
                           '< 구매자 >',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                         Text('성명 : ${widget.tranDetail.buyerName}'),
                         Text('연락처 : ${widget.tranDetail.buyerPhone}'),
@@ -173,10 +181,15 @@ class _ViewContractPageState extends State<ViewContractPage> {
               Row(
                 children: [
                   Text('${widget.tranDetail.sellerName}'),
-                  const SizedBox(
-                    width: 10,
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Text('(인)'),
+                      contractDetail.sellerSignature != null
+                          ? decodeSignature(contractDetail.sellerSignature!)
+                          : Container(),
+                    ],
                   ),
-                  const Text('(인)'),
                 ],
               ),
               Text('일자 : ${contractDetail.sellerSignatureCreatAt ?? ' '}'),
@@ -187,10 +200,18 @@ class _ViewContractPageState extends State<ViewContractPage> {
               Row(
                 children: [
                   Text('${widget.tranDetail.buyerName}'),
-                  const SizedBox(
-                    width: 10,
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Text('(인)'),
+                      contractDetail.buyerSignature != null
+                          ? decodeSignature(contractDetail.buyerSignature!)
+                          : const SizedBox(
+                              width: 50,
+                              height: 50,
+                            ),
+                    ],
                   ),
-                  const Text('(인)'),
                 ],
               ),
               Text('일자 : ${contractDetail.buyerSignatureCreatAt ?? ' '}'),
@@ -204,12 +225,28 @@ class _ViewContractPageState extends State<ViewContractPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  RegisterBtn(
-                      btnName: '확인',
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      isModal: false)
+                  widget.tranDetail.dealStatus == 'BEFORE'
+                      ? RegisterBtn(
+                          btnName: '확정하기',
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SignPad(
+                                  isSeller:
+                                      contractDetail.sellerSignature == null,
+                                  contractId: widget.tranDetail.contactId!,
+                                );
+                              },
+                            );
+                          },
+                          isModal: false)
+                      : RegisterBtn(
+                          btnName: '확인',
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          isModal: false),
                 ],
               ),
               const SizedBox(

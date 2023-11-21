@@ -108,9 +108,6 @@ class _WriteContractPageState extends State<WriteContractPage> {
                       children: [
                         const Text(
                           '< 판매자 >',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                         Text('성명 : ${tranDetail.sellerName}'),
                         Text('연락처 : ${tranDetail.sellerPhone}'),
@@ -125,9 +122,6 @@ class _WriteContractPageState extends State<WriteContractPage> {
                       children: [
                         const Text(
                           '< 구매자 >',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                         Text('성명 : ${tranDetail.buyerName}'),
                         Text('연락처 : ${tranDetail.buyerPhone}'),

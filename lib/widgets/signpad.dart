@@ -77,7 +77,7 @@ class _SignPadState extends State<SignPad> {
             ),
             SfSignaturePad(
               key: _signaturePadGlobalKey,
-              backgroundColor: const Color(0xFFD9D9D9),
+              backgroundColor: Colors.transparent,
               minimumStrokeWidth: 4.0,
               maximumStrokeWidth: 4.0,
             ),
