@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:ojakgyo/src/pages/view_contract_page.dart';
+import 'package:ojakgyo/src/pages/main_page.dart';
 import 'package:ojakgyo/src/services/user_info_model.dart';
 
 import 'package:ojakgyo/widgets/back_navbar.dart';
@@ -179,6 +180,27 @@ class _TranDetailPageState extends State<TranDetailPage> {
           () {
             tranDetail.dealStatus = "COMPlETE";
           },
+        );
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> deleteDeal() async {
+    int? dealId = widget.dealId;
+    AuthTokenDelete authToken = AuthTokenDelete();
+
+    try {
+      int statusCode = await authToken.authTokenCallback(dealId!);
+
+      if (statusCode == 200) {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainPage(),
+          ),
         );
       }
     } catch (e) {
@@ -677,7 +699,7 @@ class _TranDetailPageState extends State<TranDetailPage> {
                                         RegisterBtn(
                                           btnName: '파기',
                                           onPressed: () {
-                                            Navigator.pop(context);
+                                            deleteDeal();
                                           },
                                           isModal: true,
                                         ),

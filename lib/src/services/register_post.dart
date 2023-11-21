@@ -40,6 +40,7 @@ class RegisterPost {
       final responseBody = await response.stream.bytesToString();
       final responseData = json.decode(responseBody);
       final int dealId = responseData;
+
       return dealId;
     } else {
       return -999;

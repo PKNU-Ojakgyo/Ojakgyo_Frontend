@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:ojakgyo/src/pages/write_contract_page.dart';
 import 'package:ojakgyo/src/pages/main_page.dart';
@@ -16,6 +17,7 @@ import 'package:ojakgyo/widgets/inquiry_counterparty_modal.dart';
 import 'package:ojakgyo/widgets/custom_alert_dialog.dart';
 
 import 'package:ojakgyo/src/services/user_info_model.dart';
+import 'package:ojakgyo/src/services/auth_token_get.dart';
 
 class RegisterTranPage extends StatefulWidget {
   const RegisterTranPage({
@@ -123,6 +125,28 @@ class _AppState extends State<RegisterTranPage> {
       return false;
     } else {
       return true;
+    }
+  }
+
+  Future<void> beforeToDealing(int dealId) async {
+    AuthTokenGet authToken = AuthTokenGet();
+    try {
+      http.Response response = await authToken
+          .authTokenCallBack('deal-details/update-deal-status?dealId=$dealId');
+
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainPage(),
+          ),
+        );
+      } else {
+        throw Exception('데이터를 불러오지 못했습니다.');
+      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
@@ -381,13 +405,7 @@ class _AppState extends State<RegisterTranPage> {
                                                 RegisterBtn(
                                                   btnName: '아니요',
                                                   onPressed: () {
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const MainPage(),
-                                                      ),
-                                                    );
+                                                    beforeToDealing(dealId);
                                                   },
                                                   isModal: true,
                                                 ),
