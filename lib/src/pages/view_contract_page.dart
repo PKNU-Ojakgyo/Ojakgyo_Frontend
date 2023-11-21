@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:typed_data';
+import 'package:pdf/pdf.dart';
+import 'dart:io';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'package:flutter/services.dart';
 
 import 'package:ojakgyo/src/services/auth_token_get.dart';
 import 'package:ojakgyo/src/services/contract_detail_model.dart';
@@ -60,6 +65,385 @@ class _ViewContractPageState extends State<ViewContractPage> {
     return signatureImg;
   }
 
+  Future<void> generatePDF(String sellerSign, String buyerSign) async {
+    final font = await rootBundle.load("assets/fonts/NotoSansKR-Regular.ttf");
+    final ttf = pw.Font.ttf(font);
+
+    final pdf = pw.Document();
+
+    final Uint8List sellerSignatureBytes = base64.decode(sellerSign);
+    final Uint8List buyerSignatureBytes = base64.decode(buyerSign);
+
+    const pdfPageFormat = PdfPageFormat.a4;
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: pdfPageFormat,
+        build: (pw.Context context) {
+          return [
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.SizedBox(height: 15),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      pw.Text(
+                        '간이계약서',
+                        style: pw.TextStyle(
+                          fontSize: 20,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.SizedBox(
+                    height: 12,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '거래 당사자의 정보',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.SizedBox(
+                    height: 4,
+                  ),
+                  pw.Text(
+                    '< 판매자 >',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '성명 : ${widget.tranDetail.sellerName}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '연락처 : ${widget.tranDetail.sellerPhone}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '은행 : ${widget.tranDetail.bank}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '계좌번호 : ${widget.tranDetail.account}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 4,
+                  ),
+                  pw.Text(
+                    '< 구매자 >',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '성명 : ${widget.tranDetail.buyerName}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '연락처 : ${widget.tranDetail.buyerPhone}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '거래 물품의 정보',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '물품명 : ${widget.tranDetail.itemName}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '상태 : ${widget.tranDetail.condition}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '거래 금액: ${widget.tranDetail.price}원',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '거래 조건',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '(1) 거래 일시: ${widget.tranDetail.createAtDeal}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '(2) 거래 장소: ${widget.tranDetail.lockerAddress}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '(3) 결제 방법: 계좌이체',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '거래 계약',
+                        style: pw.TextStyle(
+                            fontSize: 16,
+                            fontWeight: pw.FontWeight.normal,
+                            font: ttf),
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '(1) 거래 계약은 판매자와 구매자가 상호 합의하여 체결하는 것으로 합니다.\n(2) 판매자는 물품의 소유권을 보유하고 있으며, 구매자는 해당 물품을 구매하고자 합니다.\n(3) 판매자는 구매자에게 물품을 인도하며, 구매자는 물품 대금을 지불합니다.',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '배상 및 책임 등',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '${contractDetail.repAndRes}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '기타 사항',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '${contractDetail.note}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '서명 및 날인',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '위와 같이 거위와 같이 거래 계약을 체결합니다.',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.Text(
+                    '위와 같은 내용에 동의하며, 거래 계약서에 서명합니다.',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '판매자',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '${widget.tranDetail.sellerName}',
+                        style: pw.TextStyle(
+                          font: ttf,
+                        ),
+                      ),
+                      pw.Stack(
+                        alignment: pw.Alignment.center,
+                        children: [
+                          pw.Text(
+                            '(인)',
+                            style: pw.TextStyle(
+                              font: ttf,
+                            ),
+                          ),
+                          pw.Image(
+                            pw.MemoryImage(
+                              sellerSignatureBytes,
+                            ),
+                            width: 50,
+                            height: 50,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '일자 : ${contractDetail.sellerSignatureCreatAt ?? ' '}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 10,
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '구매자',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                          font: ttf,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Row(
+                    children: [
+                      pw.Text(
+                        '${widget.tranDetail.buyerName}',
+                        style: pw.TextStyle(
+                          font: ttf,
+                        ),
+                      ),
+                      pw.Stack(
+                        alignment: pw.Alignment.center,
+                        children: [
+                          pw.Text(
+                            '(인)',
+                            style: pw.TextStyle(
+                              font: ttf,
+                            ),
+                          ),
+                          pw.Image(
+                            pw.MemoryImage(
+                              buyerSignatureBytes,
+                            ),
+                            width: 50,
+                            height: 50,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  pw.Text(
+                    '일자 : ${contractDetail.buyerSignatureCreatAt ?? ' '}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                    ),
+                  ),
+                  pw.SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ),
+            ),
+          ];
+        },
+      ),
+    );
+
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/ojakgyo_contract.pdf';
+
+    File file = File(filePath);
+    await file.writeAsBytes(await pdf.save());
+
+    OpenFile.open(filePath);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -84,15 +468,27 @@ class _ViewContractPageState extends State<ViewContractPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   PopupMenuButton(
-                      icon: const Icon(
-                        Icons.save_alt_outlined,
-                        size: 30,
-                        color: Color.fromARGB(221, 53, 53, 53),
+                    icon: const Icon(
+                      Icons.save_alt_outlined,
+                      size: 30,
+                      color: Color.fromARGB(221, 53, 53, 53),
+                    ),
+                    itemBuilder: (BuildContext context) => [
+                      const PopupMenuItem(
+                        value: 'exportToPDF',
+                        child: Text('PDF로 내보내기'),
                       ),
-                      itemBuilder: (BuildContext context) => [
-                            const PopupMenuItem(child: Text('PNG로 내보내기')),
-                            const PopupMenuItem(child: Text('PDF로 내보내기')),
-                          ]),
+                    ],
+                    onSelected: (String value) {
+                      if (value == 'exportToPDF') {
+                        if (widget.tranDetail.dealStatus != 'BEFORE') {
+                          generatePDF(
+                              contractDetail.sellerSignature ?? 'Unknown',
+                              contractDetail.buyerSignature ?? 'Unknown');
+                        }
+                      }
+                    },
+                  ),
                 ],
               ),
               const Line(),
